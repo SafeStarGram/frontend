@@ -1,3 +1,70 @@
+import { useForm } from "react-hook-form";
+import { Link } from "react-router";
+
+interface FormData {
+  name: string;
+  email: string;
+  password: string;
+  checkPassword: string;
+}
+
 export default function SignUp() {
-  return <>SignUp</>;
+  const { register, handleSubmit } = useForm<FormData>();
+
+  const onSubmit = (data: FormData) => console.log(data);
+
+  return (
+    <div className="flex flex-col items-center justify-center gap-3 h-screen max-w-md">
+      <div className="flex flex-col items-center text-2xl">
+        <div>세이프스타그램</div>
+        <div>회원가입</div>
+      </div>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col gap-3 w-1/2"
+      >
+        <label htmlFor="name">이름</label>
+        <input
+          className="rounded-full border p-3 placeholder:text-sm"
+          id="name"
+          placeholder="이름을 입력하세요"
+          type="text"
+          {...register("name")}
+        />
+        <label htmlFor="email">이메일</label>
+        <input
+          className="rounded-full border p-3 placeholder:text-sm"
+          id="email"
+          placeholder="이메일 주소를 입력하세요"
+          type="text"
+          {...register("email")}
+        />
+        <label htmlFor="password">비밀번호</label>
+        <input
+          className="rounded-full border p-3 placeholder:text-sm"
+          id="password"
+          placeholder="비밀번호를 입력하세요"
+          type="password"
+          {...register("password")}
+        />
+        <label htmlFor="checkPassword">비밀번호 확인</label>
+        <input
+          className="rounded-full border p-3 placeholder:text-sm"
+          id="checkPassword"
+          placeholder="비밀번호를 다시 입력하세요"
+          type="password"
+          {...register("checkPassword")}
+        />
+        <button className="bg-orange-500 text-white rounded-full">
+          가입하기
+        </button>
+      </form>
+      <div className="flex gap-3">
+        <div>이미 계정이 있으신가요?</div>
+        <Link to="/login" className="underline">
+          로그인
+        </Link>
+      </div>
+    </div>
+  );
 }
