@@ -1,3 +1,4 @@
+// import axios from "axios";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
 
@@ -11,17 +12,29 @@ interface FormData {
 export default function SignUp() {
   const { register, handleSubmit } = useForm<FormData>();
 
-  const onSubmit = (data: FormData) => console.log(data);
+  const onSubmit = async (data: FormData) => {
+    // try {
+    //   const res = await axios.post("회원가입 api", {
+    //     name: data.name,
+    //     email: data.email,
+    //     password: data.password,
+    //   });
+    //   console.log("회원가입 성공", res);
+    // } catch (e) {
+    //   console.error("회원가입 실패", e);
+    // }
+    console.log(data);
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-3 h-screen max-w-md">
+    <div className="flex flex-col items-center justify-center gap-3 h-screen">
       <div className="flex flex-col items-center text-2xl">
         <div>세이프스타그램</div>
         <div>회원가입</div>
       </div>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-3 w-1/2"
+        className="flex flex-col gap-3 w-full px-5"
       >
         <label htmlFor="name">이름</label>
         <input
