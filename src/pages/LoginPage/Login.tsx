@@ -25,11 +25,11 @@ export default function Login() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-3 h-screen max-w-md">
+    <div className="flex flex-col items-center justify-center gap-3 h-screen">
       <div className="text-2xl">세이프스타그램</div>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-3 w-1/2"
+        className="flex flex-col gap-3 w-full"
       >
         <label htmlFor="email">이메일</label>
         <input
