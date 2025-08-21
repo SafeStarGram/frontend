@@ -1,6 +1,7 @@
 // import axios from "axios";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
+import Button from "../../shared/layout/Button";
 
 interface FormData {
   name: string;
@@ -68,13 +69,14 @@ export default function SignUp() {
           type="password"
           {...register("checkPassword")}
         />
-        <button className="bg-orange-500 text-white rounded-full">
-          가입하기
-        </button>
+        <Button text="가입하기" color="brand" rounded="full" />
       </form>
       <div className="flex gap-3">
         <div>이미 계정이 있으신가요?</div>
-        <Link to="/login" className="underline">
+        <Link
+          to="/login"
+          className="text-brand hover:text-orange-300 transition"
+        >
           로그인
         </Link>
       </div>

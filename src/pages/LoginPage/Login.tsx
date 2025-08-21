@@ -1,8 +1,9 @@
-import axios from "axios";
+//import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router";
 import { setAccessToken } from "../../store/authSlice";
+import Button from "../../shared/layout/Button";
 
 interface FormData {
   email: string;
@@ -26,10 +27,10 @@ export default function Login() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-3 h-screen">
-      <div className="text-2xl">세이프스타그램</div>
+      <div className="text-3xl text-brand font-bold">세이프스타그램</div>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-3 w-full"
+        className="flex flex-col gap-3 w-full max-w-sm"
       >
         <label htmlFor="email">이메일</label>
         <input
@@ -47,13 +48,16 @@ export default function Login() {
           type="password"
           {...register("password")}
         />
-        <button className="bg-orange-500 text-white rounded-full">
-          로그인
-        </button>
+        <Button text="로그인" color="brand" rounded="full" />
       </form>
       <div className="flex gap-3">
         <div>계정이 없으신가요?</div>
-        <Link to="/signup">가입하기</Link>
+        <Link
+          to="/signup"
+          className="text-brand hover:text-orange-300 transition"
+        >
+          가입하기
+        </Link>
       </div>
     </div>
   );

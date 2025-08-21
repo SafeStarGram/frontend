@@ -49,3 +49,7 @@ select {
     padding-bottom: max(env(safe-area-inset-bottom), 0px);
   }
 }
+
+@theme {
+  --color-brand: oklch(0.7346 0.1693 41.45);
+}
