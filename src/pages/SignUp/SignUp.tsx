@@ -29,7 +29,8 @@ export default function SignUp() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-3 h-screen">
-      <div className="flex flex-col items-center text-2xl">
+      {/* 이미지 */}
+      <div className="flex flex-col items-center text-3xl text-brand font-bold">
         <div>세이프스타그램</div>
         <div>회원가입</div>
       </div>
@@ -63,7 +64,7 @@ export default function SignUp() {
         />
         <label htmlFor="checkPassword">비밀번호 확인</label>
         <input
-          className="rounded-full border p-3 placeholder:text-sm"
+          className="rounded-full border p-3 placeholder:text-sm mb-5"
           id="checkPassword"
           placeholder="비밀번호를 다시 입력하세요"
           type="password"

@@ -27,6 +27,7 @@ export default function Login() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-3 h-screen">
+      {/* 이미지 */}
       <div className="text-3xl text-brand font-bold">세이프스타그램</div>
       <form
         onSubmit={handleSubmit(onSubmit)}
