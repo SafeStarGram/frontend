@@ -6,15 +6,15 @@ interface HeaderProps {
   showBackButton?: boolean;
 }
 
-export default function Header({ 
-  title, 
-  onBack, 
-  showBackButton = true 
+export default function Header({
+  title,
+  onBack,
+  showBackButton = true,
 }: HeaderProps) {
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 px-4 py-3">
+    <header className="absolute top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 px-4 py-3">
       <div className="flex items-center justify-between">
-        <div className="flex items-center">
+        <div className="w-10">
           {showBackButton && (
             <button
               onClick={onBack}
@@ -24,8 +24,9 @@ export default function Header({
               <IoArrowBack className="w-6 h-6 text-gray-700" />
             </button>
           )}
-          <h1 className="text-lg font-semibold text-gray-900">{title}</h1>
         </div>
+        <h1 className="text-lg font-semibold text-gray-900">{title}</h1>
+        <div className="w-10" />
       </div>
     </header>
   );

@@ -49,7 +49,7 @@ export default function Login() {
           type="password"
           {...register("password")}
         />
-        <Button text="로그인" color="brand" rounded="full" />
+        <Button text="로그인" className="bg-brand rounded-full font-bold" />
       </form>
       <div className="flex gap-3">
         <div>계정이 없으신가요?</div>

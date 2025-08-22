@@ -1,15 +1,8 @@
 interface ButtonProps {
   text: string;
-  color: string;
-  rounded: string;
+  className: string;
 }
 
-export default function Button({ text, color, rounded }: ButtonProps) {
-  return (
-    <button
-      className={`text-white font-bold bg-${color} rounded-${rounded} p-2`}
-    >
-      {text}
-    </button>
-  );
+export default function Button({ text, className }: ButtonProps) {
+  return <button className={`text-white p-2 ${className}`}>{text}</button>;
 }

@@ -20,7 +20,7 @@ export default function Layout({
   notificationCount = 0,
 }: LayoutProps) {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen relative bg-gray-50">
       <Header title={title} showBackButton={showBackButton} onBack={onBack} />
 
       <main className="pt-16 pb-20 px-4">{children}</main>

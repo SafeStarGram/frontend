@@ -70,7 +70,7 @@ export default function SignUp() {
           type="password"
           {...register("checkPassword")}
         />
-        <Button text="가입하기" color="brand" rounded="full" />
+        <Button text="가입하기" className="bg-brand rounded-full font-bold" />
       </form>
       <div className="flex gap-3">
         <div>이미 계정이 있으신가요?</div>
