@@ -4,10 +4,18 @@ import Button from "../../shared/layout/Button";
 import { IoCamera } from "react-icons/io5";
 import { useState } from "react";
 
+interface IForm {
+  name: string;
+  phone: string;
+  radio: number;
+  department: string;
+  position: string;
+}
+
 export default function Profile() {
-  const { register, handleSubmit } = useForm();
-  const onSubmit = () => {
-    console.log("success");
+  const { register, handleSubmit } = useForm<IForm>();
+  const onSubmit = (data: IForm) => {
+    console.log(data);
   };
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -20,7 +28,7 @@ export default function Profile() {
   return (
     <Layout title="프로파일" showBackButton={false} activeTab="profile">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex flex-col items-center space-y-4">
+        <div className="flex flex-col items-center gap-4 my-5">
           {/* 프로필 이미지 미리보기 */}
           <div className="w-28 h-28 rounded-full overflow-hidden bg-gray-200">
             {preview ? (
@@ -34,15 +42,6 @@ export default function Profile() {
             )}
           </div>
 
-          {/* 숨겨진 파일 input */}
-          <input
-            type="file"
-            id="profileUpload"
-            accept="image/*"
-            className="hidden"
-            onChange={handleImageChange}
-          />
-
           {/* 버튼처럼 보이는 label */}
           <label
             htmlFor="profileUpload"
@@ -51,40 +50,63 @@ export default function Profile() {
             <IoCamera />
             <span>프로필 사진 변경</span>
           </label>
+          {/* 숨겨진 파일 input */}
+          <input
+            type="file"
+            id="profileUpload"
+            accept="image/*"
+            className="hidden"
+            onChange={handleImageChange}
+          />
         </div>
-        <div className="border border-gray-300 p-2 rounded-2xl">
-          <div>인적사항</div>
-          <hr className="text-gray-300" />
-          <div className="flex flex-col">
+        <div className="border border-gray-300 p-3 rounded-2xl">
+          <div className="font-bold mt-2">인적사항</div>
+          <hr className="text-gray-300 mb-5 mt-2 border-1" />
+          <div className="flex flex-col gap-2">
             <label htmlFor="name">이름</label>
             <input
+              className="rounded-xl p-2 border border-gray-300"
               type="string"
               placeholder="이름"
               id="name"
               {...register("name")}
             />
+            <hr className="text-gray-300 mb-5 mt-2" />
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-2">
             <label htmlFor="phone">핸드폰/무전번호</label>
-            <div>
+            <div className="flex gap-2">
               <input
+                className="rounded-xl border border-gray-300 p-2 w-2/3"
                 type="string"
                 placeholder="010-1234-5678"
                 id="phone"
                 {...register("phone")}
               />
-              <input type="string" placeholder="# 9" {...register("radio")} />
+              <input
+                className="rounded-xl border border-gray-300 p-2 w-1/3"
+                type="string"
+                placeholder="# 9"
+                {...register("radio")}
+              />
             </div>
+            <hr className="text-gray-300 mb-5 mt-2" />
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-2">
             <label>부서/직책</label>
-            <div>
-              <select {...register("department")}>
+            <div className="flex gap-2">
+              <select
+                {...register("department")}
+                className="rounded-xl border border-gray-300 w-2/3 p-2"
+              >
                 <option value="설비">설비</option>
                 <option value="안전">안전</option>
                 <option value="관리">관리</option>
               </select>
-              <select {...register("position")}>
+              <select
+                {...register("position")}
+                className="rounded-xl border border-gray-300 w-1/3 p-2"
+              >
                 <option value="사원">사원</option>
                 <option value="대리">대리</option>
                 <option value="과장">과장</option>
@@ -99,6 +121,7 @@ export default function Profile() {
         />
       </form>
       <Button text="현장 관리" className="bg-black rounded-2xl w-full" />
+      {/* 현장관리 버튼 누르면 관리자메뉴로 이동. 관리자만 이동 가능하도록 설정하기. */}
     </Layout>
   );
 }
