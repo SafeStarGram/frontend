@@ -27,7 +27,7 @@ export default function Footer({
 
           return (
             <Link
-              to={`/${tab.id}`}
+              to={tab.id === "home" ? "/" : `/${tab.id}`}
               key={tab.id}
               className={`flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-colors ${
                 isActive

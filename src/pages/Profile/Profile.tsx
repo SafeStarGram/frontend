@@ -10,6 +10,7 @@ interface IForm {
   radio: number;
   department: string;
   position: string;
+  image: File;
 }
 
 export default function Profile() {
@@ -56,6 +57,7 @@ export default function Profile() {
             id="profileUpload"
             accept="image/*"
             className="hidden"
+            {...register("image")}
             onChange={handleImageChange}
           />
         </div>
@@ -116,11 +118,16 @@ export default function Profile() {
           </div>
         </div>
         <Button
+          disabled={false}
           text="프로필 저장"
           className="bg-brand rounded-2xl w-full my-3"
         />
       </form>
-      <Button text="현장 관리" className="bg-black rounded-2xl w-full" />
+      <Button
+        disabled={false}
+        text="현장 관리"
+        className="bg-black rounded-2xl w-full"
+      />
       {/* 현장관리 버튼 누르면 관리자메뉴로 이동. 관리자만 이동 가능하도록 설정하기. */}
     </Layout>
   );
