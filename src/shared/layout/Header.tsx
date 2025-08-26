@@ -12,7 +12,7 @@ export default function Header({
   showBackButton = true,
 }: HeaderProps) {
   return (
-    <header className="absolute top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 px-4 py-3">
+    <header className="sticky top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 px-4 py-3 h-20">
       <div className="flex items-center justify-between">
         <div className="w-10">
           {showBackButton && (

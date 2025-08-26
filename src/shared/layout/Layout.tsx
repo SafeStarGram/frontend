@@ -23,7 +23,9 @@ export default function Layout({
     <div className="min-h-screen relative bg-gray-50">
       <Header title={title} showBackButton={showBackButton} onBack={onBack} />
 
-      <main className="pt-16 pb-20 px-4">{children}</main>
+      <main className="py-4 px-4 flex-1 overflow-auto h-[calc(100vh-10rem)]">
+        {children}
+      </main>
 
       <Footer activeTab={activeTab} notificationCount={notificationCount} />
     </div>

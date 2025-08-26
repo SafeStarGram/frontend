@@ -18,7 +18,7 @@ export default function Footer({
   ] as const;
 
   return (
-    <footer className="absolute bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 h-20">
+    <footer className="sticky bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 h-20">
       <nav className="flex items-center justify-around py-2">
         {tabs.map((tab) => {
           const Icon = tab.icon;
