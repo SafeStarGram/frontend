@@ -19,10 +19,10 @@ interface IForm {
 }
 
 export default function Upload() {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm<IForm>();
   const time = useCurrentTime();
 
-  const onSubmit = (data: Iform) => {
+  const onSubmit = (data: IForm) => {
     console.log(data);
   };
 
