@@ -1,10 +1,10 @@
-//import axios from "axios";
+import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { setAccessToken } from "../../store/authSlice";
 import Button from "../../shared/layout/Button";
-import { LuHardHat } from "react-icons/lu";
+import image from "../../assets/safestargram.png";
 
 interface FormData {
   email: string;
@@ -15,25 +15,42 @@ export default function Login() {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { isValid, errors },
   } = useForm<FormData>({ mode: "onSubmit" });
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const onSubmit = async (data: FormData) => {
-    // try {
-    //   const res = await axios.post("로그인 api", data);
-    //   dispatch(setAccessToken(res.data.accessToken));
-    //   console.log("로그인 성공", res);
-    // } catch (e) {
-    //   console.error("로그인 실패", e);
-    // }
-    dispatch(setAccessToken("testToken"));
+    try {
+      const res = await axios.post(
+        "https://chan23.duckdns.org/safe_api/auth/login",
+        data
+      );
+      dispatch(setAccessToken(res.data.accessToken));
+      navigate("/");
+      console.log("로그인 성공", res);
+      // refreshtoken은 서버에서 cookie에 저장해줘야함. 그게 보안상 가장 안전.
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        if (e.response?.status === 401) {
+          setError("password", {
+            type: "server",
+            message: "이메일 또는 비밀번호가 올바르지 않습니다.",
+          });
+        } else {
+          alert("서버 에러가 발생했습니다. 다시 시도해주세요.");
+        }
+      } else {
+        console.error("알 수 없는 에러:", e);
+      }
+    }
     console.log(data);
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-3 h-screen bg-gray-50">
-      <LuHardHat className="text-brand w-32 h-32" />
-      <div className="text-3xl text-brand font-bold">세이프스타그램</div>
+    <div className="flex flex-col items-center justify-center gap-3 min-h-screen bg-gray-50 py-10">
+      <img src={image} className="w-32 h-32" />
+      <div className="text-3xl text-brand font-bold mb-10">세이프스타그램</div>
       <form
         noValidate
         onSubmit={handleSubmit(onSubmit)}
@@ -74,7 +91,7 @@ export default function Login() {
         <Button
           disabled={!isValid}
           text="로그인"
-          className={`bg-brand rounded-full font-bold ${
+          className={`bg-brand rounded-full font-bold mt-5 ${
             !isValid
               ? "opacity-30 cursor-not-allowed"
               : "hover:cursor-pointer hover:bg-orange-300"

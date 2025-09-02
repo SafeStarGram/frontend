@@ -10,12 +10,13 @@ interface IForm {
   radio: number;
   department: string;
   position: string;
-  image: File;
+  image: File | null;
 }
 
 export default function Profile() {
-  const { register, handleSubmit } = useForm<IForm>();
+  const { register, handleSubmit, setValue } = useForm<IForm>();
   const onSubmit = (data: IForm) => {
+    // 이미지 업로드 api + 유저 정보 저장 api
     console.log(data);
   };
   const [preview, setPreview] = useState<string | null>(null);
@@ -24,6 +25,7 @@ export default function Profile() {
     const file = e.target.files?.[0];
     if (file) {
       setPreview(URL.createObjectURL(file));
+      setValue("image", file);
     }
   };
   return (
@@ -46,7 +48,7 @@ export default function Profile() {
           {/* 버튼처럼 보이는 label */}
           <label
             htmlFor="profileUpload"
-            className="flex items-center space-x-2 bg-orange-400 hover:bg-orange-500 text-white font-bold py-2 px-4 rounded-full cursor-pointer"
+            className="flex items-center space-x-2 bg-orange-400 hover:bg-orange-500 transition text-white font-bold py-2 px-4 rounded-full cursor-pointer"
           >
             <IoCamera />
             <span>프로필 사진 변경</span>
@@ -101,18 +103,25 @@ export default function Profile() {
                 {...register("department")}
                 className="rounded-xl border border-gray-300 w-2/3 p-2"
               >
-                <option value="설비">설비</option>
-                <option value="안전">안전</option>
-                <option value="관리">관리</option>
+                <option value="1">공사</option>
+                <option value="2">공무</option>
+                <option value="3">관리</option>
+                <option value="4">보건</option>
+                <option value="5">설비</option>
+                <option value="6">안전</option>
+                <option value="7">전기</option>
+                <option value="8">품질</option>
               </select>
               <select
                 {...register("position")}
                 className="rounded-xl border border-gray-300 w-1/3 p-2"
               >
-                <option value="사원">사원</option>
-                <option value="대리">대리</option>
-                <option value="과장">과장</option>
-                <option value="부장">부장</option>
+                <option value="1">부장</option>
+                <option value="2">차장</option>
+                <option value="3">과장</option>
+                <option value="4">대리</option>
+                <option value="5">주임</option>
+                <option value="6">사원</option>
               </select>
             </div>
           </div>
@@ -120,13 +129,13 @@ export default function Profile() {
         <Button
           disabled={false}
           text="프로필 저장"
-          className="bg-brand rounded-2xl w-full my-3"
+          className="bg-brand rounded-2xl w-full my-3 hover:bg-orange-300 hover:cursor-pointer"
         />
       </form>
       <Button
         disabled={false}
         text="현장 관리"
-        className="bg-black rounded-2xl w-full"
+        className="bg-black rounded-2xl w-full hover:bg-gray-700 hover:cursor-pointer"
       />
       {/* 현장관리 버튼 누르면 관리자메뉴로 이동. 관리자만 이동 가능하도록 설정하기. */}
     </Layout>

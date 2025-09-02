@@ -1,8 +1,9 @@
 // import axios from "axios";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import Button from "../../shared/layout/Button";
-import { LuHardHat } from "react-icons/lu";
+import image from "../../assets/safestargram.png";
+import axios from "axios";
 
 interface FormData {
   name: string;
@@ -18,23 +19,31 @@ export default function SignUp() {
     formState: { isValid, errors },
   } = useForm<FormData>({ mode: "onChange" });
 
+  const navigate = useNavigate();
+
   const onSubmit = async (data: FormData) => {
-    // try {
-    //   const res = await axios.post("회원가입 api", {
-    //     name: data.name,
-    //     email: data.email,
-    //     password: data.password,
-    //   });
-    //   console.log("회원가입 성공", res);
-    // } catch (e) {
-    //   console.error("회원가입 실패", e);
-    // }
+    try {
+      const res = await axios.post(
+        "https://chan23.duckdns.org/safe_api/auth/join",
+        {
+          name: data.name,
+          email: data.email,
+          password: data.password,
+        }
+      );
+      console.log("회원가입 성공", res);
+      navigate("/login");
+    } catch (e) {
+      console.error("회원가입 실패", e);
+      alert("서버 에러가 발생했습니다. 다시 시도해주세요.");
+    }
+
     console.log(data);
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-3 h-screen bg-gray-50">
-      <LuHardHat className="text-brand w-32 h-32" />
+    <div className="flex flex-col items-center justify-center gap-3 min-h-screen bg-gray-50 py-10">
+      <img src={image} className="w-32 h-32" />
       <div className="flex flex-col items-center text-3xl text-brand font-bold">
         <div>세이프스타그램</div>
         <div>회원가입</div>

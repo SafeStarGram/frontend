@@ -1,8 +1,9 @@
 import axios from "axios";
 import { store } from "../../store/store";
+import { clearAccessToken, setAccessToken } from "../../store/authSlice";
 
 const api = axios.create({
-  baseURL: "API 기본 주소",
+  baseURL: "https://chan23.duckdns.org/safe_api/",
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
@@ -25,23 +26,37 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
+    if (error.response?.status === 401 && error.message === "TokenExpired") {
+      // access token이 만료되었을 경우
+      try {
+        const res = await api.post("auth/refresh", {});
+        const newAccessToken = res.data.accessToken;
+        store.dispatch(setAccessToken(newAccessToken));
+
+        // 실패한 요청 재시도
+        const config = error.config;
+        config.headers["Authorization"] = `Bearer ${newAccessToken}`;
+        return api(config);
+      } catch (e) {
+        // refresh token도 만료된 경우
+        store.dispatch(clearAccessToken());
+        alert("로그인 세션이 만료되었습니다. 다시 로그인 해주세요.");
+        window.location.href = "/login";
+        return Promise.reject(e);
+      }
+    }
     if (
       error.response?.status === 401 &&
       error.message === "InvalidTokenException"
     ) {
-      // 토큰이 없거나 잘못되었을 경우
-      // 로그아웃
+      // access token이 없거나 잘못되었을 경우
+      store.dispatch(clearAccessToken());
+      alert("로그인 정보가 올바르지 않습니다.다시 로그인 해주세요.");
+      window.location.href = "/login";
     }
-    if (error.response?.status === 401 && error.message === "TokenExpired") {
-      // 토큰이 만료되었을 경우
-      // refresh token을 이용해 토큰 새로 발급
-      // 새로 발급받은 토큰 redux에 저장
-      // 재요청
-    }
+
     return Promise.reject(error);
   }
 );
 
 export default api;
-
-// api를 이용해서 통신.
