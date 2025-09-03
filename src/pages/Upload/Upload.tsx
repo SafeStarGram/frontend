@@ -10,7 +10,7 @@ import { CiWarning } from "react-icons/ci";
 import { useState } from "react";
 
 interface IForm {
-  image: File;
+  image: File | null;
   upperArea: string;
   lowerArea: string;
   title: string;
@@ -19,17 +19,32 @@ interface IForm {
 }
 
 export default function Upload() {
-  const { register, handleSubmit } = useForm<IForm>();
+  const { register, handleSubmit, setValue } = useForm<IForm>();
   const time = useCurrentTime();
 
   const onSubmit = (data: IForm) => {
-    console.log(data);
+    const formData = new FormData();
+    if (data.image) {
+      formData.append("image", data.image); // File 객체
+    }
+    formData.append("upperArea", data.upperArea);
+    formData.append("lowerArea", data.lowerArea);
+    formData.append("title", data.title);
+    formData.append("description", data.description);
+    formData.append("score", String(data.score));
+
+    // 예시: axios로 전송
+    // axios.post("/api/upload", formData, {
+    //   headers: { "Content-Type": "multipart/form-data" }
+    // });
+
+    console.log([...formData]); // 실제 들어간 값 확인 가능
   };
 
   const [preview, setPreview] = useState<string | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files?.[0] || null;
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -37,6 +52,7 @@ export default function Upload() {
       };
       reader.readAsDataURL(file);
     }
+    setValue("image", file);
   };
   return (
     <Layout
@@ -48,25 +64,28 @@ export default function Upload() {
         <div className="w-full flex flex-col items-center">
           <label
             htmlFor="imageUpload"
-            className="w-full h-64 flex flex-col justify-center items-center  rounded-xl cursor-pointer bg-gray-200 hover:bg-gray-300 transition mb-10"
+            className="w-full h-64 flex flex-col justify-center items-center  rounded-xl cursor-pointer bg-gray-200 hover:bg-gray-300 transition mb-3"
           >
             {preview ? (
               <img
                 src={preview}
                 alt="업로드 미리보기"
-                className="w-full h-full object-cover rounded-xl"
+                className="w-full h-full object-cover rounded-xl hover:opacity-80 transition"
               />
             ) : (
               <div className="flex flex-col items-center gap-2 text-gray-500">
                 <LuCirclePlus className="w-24 h-24 text-orange-500" />
-                <span className="bg-brand p-2 hover:cursor-pointer hover:bg-orange-300 transition rounded-md text-white px-5">
-                  위험 사진 올리기
-                </span>
               </div>
             )}
           </label>
+
+          <label
+            htmlFor="imageUpload"
+            className="flex items-center justify-center bg-brand p-2 hover:cursor-pointer hover:bg-orange-300 transition rounded-md text-white w-full"
+          >
+            위험 사진 올리기
+          </label>
           <input
-            {...register("image")}
             type="file"
             id="imageUpload"
             accept="image/*"
@@ -74,12 +93,13 @@ export default function Upload() {
             onChange={handleFileChange}
           />
         </div>
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-5 mt-10">
           <h3 className="text-xl font-bold">위험 요소 설명</h3>
 
           <div className="flex items-center border rounded-2xl border-gray-300 p-5 gap-5">
             <IoLocationOutline className="text-gray-500 w-6 h-6" />
             <div className="flex flex-col w-1/3">
+              {/* 상위구역 하위구역 정보 가져와서 보여줘야함 */}
               <label htmlFor="upperArea" className="text-gray-500 text-sm">
                 상위구역
               </label>
