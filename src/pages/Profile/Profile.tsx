@@ -17,10 +17,27 @@ interface IForm {
 }
 
 export default function Profile() {
-  const { register, handleSubmit, setValue } = useForm<IForm>();
+  const { register, handleSubmit, setValue, reset } = useForm<IForm>();
   const userId = useSelector((state: RootState) => state.user.userId);
-  const onSubmit = (data: IForm) => {
+  const onSubmit = async (data: IForm) => {
     // 이미지 업로드 api + 유저 정보 저장 api
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("phone", data.phone);
+    formData.append("radio", data.radio.toString());
+    formData.append("department", data.department);
+    formData.append("position", data.position);
+    if (data.image) {
+      formData.append("image", data.image);
+    }
+    const res = await api.put("profiles/me", formData, {
+      params: { userId },
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    console.log(res);
     console.log(data);
   };
   const [preview, setPreview] = useState<string | null>(null);
@@ -35,8 +52,16 @@ export default function Profile() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const user = await api.get("profiles/me", { params: { userId } });
-      console.log(user.data);
+      const res = await api.get("profiles/me", { params: { userId } });
+      const userData = res.data;
+      console.log(userData.data);
+      reset({
+        name: userData.name,
+        phone: userData.phoneNumber,
+        radio: userData.radioNumber,
+        department: userData.departmentId.toString(),
+        position: userData.positionId.toString(),
+      });
     };
     fetchUser();
   }, []);
