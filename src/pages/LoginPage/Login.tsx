@@ -92,11 +92,7 @@ export default function Login() {
         <Button
           disabled={!isValid}
           text="로그인"
-          className={`bg-brand rounded-full font-bold mt-5 ${
-            !isValid
-              ? "opacity-30 cursor-not-allowed"
-              : "hover:cursor-pointer hover:bg-orange-300"
-          }`}
+          className="rounded-full font-bold mt-5"
         />
       </form>
       <div className="flex gap-3">

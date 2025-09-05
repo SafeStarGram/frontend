@@ -35,7 +35,7 @@ export default function Profile() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const user = await api.get("profiles/me", { params: { userId: 1 } });
+      const user = await api.get("profiles/me", { params: { userId } });
       console.log(user.data);
     };
     fetchUser();
@@ -142,13 +142,15 @@ export default function Profile() {
         <Button
           disabled={false}
           text="프로필 저장"
-          className="bg-brand rounded-2xl w-full my-3 hover:bg-orange-300 hover:cursor-pointer"
+          className="rounded-2xl w-full my-3"
         />
       </form>
       <Button
         disabled={false}
         text="현장 관리"
-        className="bg-black rounded-2xl w-full hover:bg-gray-700 hover:cursor-pointer"
+        className="rounded-2xl w-full"
+        baseColor="black"
+        hoverColor="gray-700"
       />
       {/* 현장관리 버튼 누르면 관리자메뉴로 이동. 관리자만 이동 가능하도록 설정하기. */}
     </Layout>
