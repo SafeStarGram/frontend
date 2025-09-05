@@ -4,9 +4,9 @@ import Layout from "../../shared/layout/Layout";
 export default function HomePage() {
   const [notificationCount] = useState(9);
 
-  const handleBack = () => {
-    console.log("뒤로 가기");
-  };
+  // const handleBack = () => {
+  //   console.log("뒤로 가기");
+  // };
 
   return (
     <Layout
