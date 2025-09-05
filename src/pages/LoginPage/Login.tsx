@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router";
 import { setAccessToken } from "../../store/authSlice";
 import Button from "../../shared/layout/Button";
 import image from "../../assets/safestargram.png";
+import { setUserId } from "../../store/userSlice";
 
 interface FormData {
   email: string;
@@ -24,12 +25,13 @@ export default function Login() {
     try {
       const res = await axios.post(
         "https://chan23.duckdns.org/safe_api/auth/login",
-        data
+        data,
+        { withCredentials: true }
       );
       dispatch(setAccessToken(res.data.accessToken));
+      dispatch(setUserId(res.data.userId));
       navigate("/");
       console.log("로그인 성공", res);
-      // refreshtoken은 서버에서 cookie에 저장해줘야함. 그게 보안상 가장 안전.
     } catch (e) {
       if (axios.isAxiosError(e)) {
         if (e.response?.status === 401) {
@@ -44,7 +46,6 @@ export default function Login() {
         console.error("알 수 없는 에러:", e);
       }
     }
-    console.log(data);
   };
 
   return (

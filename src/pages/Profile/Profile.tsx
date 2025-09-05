@@ -2,7 +2,10 @@ import { useForm } from "react-hook-form";
 import Layout from "../../shared/layout/Layout";
 import Button from "../../shared/layout/Button";
 import { IoCamera } from "react-icons/io5";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import api from "../../shared/api/axiosInstance";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../store/store";
 
 interface IForm {
   name: string;
@@ -15,6 +18,7 @@ interface IForm {
 
 export default function Profile() {
   const { register, handleSubmit, setValue } = useForm<IForm>();
+  const userId = useSelector((state: RootState) => state.user.userId);
   const onSubmit = (data: IForm) => {
     // 이미지 업로드 api + 유저 정보 저장 api
     console.log(data);
@@ -28,6 +32,15 @@ export default function Profile() {
       setValue("image", file);
     }
   };
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const user = await api.get("profiles/me", { params: { userId: 1 } });
+      console.log(user.data);
+    };
+    fetchUser();
+  }, []);
+
   return (
     <Layout title="프로파일" showBackButton={false} activeTab="profile">
       <form onSubmit={handleSubmit(onSubmit)}>
