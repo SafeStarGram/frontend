@@ -22,13 +22,23 @@ export default function Profile() {
   const onSubmit = async (data: IForm) => {
     // 이미지 업로드 api + 유저 정보 저장 api
     const formData = new FormData();
-    formData.append("name", data.name);
-    formData.append("phone", data.phone);
-    formData.append("radio", data.radio.toString());
-    formData.append("department", data.department);
-    formData.append("position", data.position);
+    const profileData = {
+      name: data.name, // 이름 추가
+      phoneNumber: data.phone, // phone -> phoneNumber
+      radioNumber: data.radio, // radio -> radioNumber
+      profilePhotoUrl: "", // 필요하다면
+    };
+
+    formData.append(
+      "req",
+      new Blob([JSON.stringify(profileData)], {
+        type: "application/json",
+      })
+    );
+
+    // 파일이 있다면 file로 추가
     if (data.image) {
-      formData.append("image", data.image);
+      formData.append("file", data.image);
     }
     const res = await api.put("profiles/me", formData, {
       params: { userId },
