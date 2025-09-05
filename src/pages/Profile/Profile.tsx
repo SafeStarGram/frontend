@@ -97,7 +97,6 @@ export default function Profile() {
             id="profileUpload"
             accept="image/*"
             className="hidden"
-            {...register("image")}
             onChange={handleImageChange}
           />
         </div>
@@ -175,7 +174,7 @@ export default function Profile() {
         text="현장 관리"
         className="rounded-2xl w-full"
         baseColor="black"
-        hoverColor="gray-700"
+        hoverColor="black"
       />
       {/* 현장관리 버튼 누르면 관리자메뉴로 이동. 관리자만 이동 가능하도록 설정하기. */}
     </Layout>
