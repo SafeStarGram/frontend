@@ -5,14 +5,47 @@ import HomePage from "../pages/HomePage/HomePage";
 import Profile from "../pages/Profile/Profile";
 import Upload from "../pages/Upload/Upload";
 import Notifications from "../pages/Notifications/Notifications";
+import ProtectedRoute from "./ProtectedRoute";
 
 const router = createBrowserRouter([
-  { path: "/", element: <HomePage />, children: [] },
+  {
+    path: "/",
+    element: (
+      <ProtectedRoute>
+        <HomePage />
+      </ProtectedRoute>
+    ),
+    children: [],
+  },
   { path: "/signup", element: <SignUp />, children: [] },
   { path: "/login", element: <Login />, children: [] },
-  { path: "/profile", element: <Profile />, children: [] },
-  { path: "/upload", element: <Upload />, children: [] },
-  { path: "/notifications", element: <Notifications />, children: [] },
+  {
+    path: "/profile",
+    element: (
+      <ProtectedRoute>
+        <Profile />
+      </ProtectedRoute>
+    ),
+    children: [],
+  },
+  {
+    path: "/upload",
+    element: (
+      <ProtectedRoute>
+        <Upload />
+      </ProtectedRoute>
+    ),
+    children: [],
+  },
+  {
+    path: "/notifications",
+    element: (
+      <ProtectedRoute>
+        <Notifications />
+      </ProtectedRoute>
+    ),
+    children: [],
+  },
 ]);
 
 export default router;
