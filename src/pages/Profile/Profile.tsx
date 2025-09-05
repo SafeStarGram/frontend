@@ -26,7 +26,7 @@ export default function Profile() {
       name: data.name, // 이름 추가
       phoneNumber: data.phone, // phone -> phoneNumber
       radioNumber: data.radio, // radio -> radioNumber
-      profilePhotoUrl: "", // 필요하다면
+      profilePhotoUrl: "", 
     };
 
     formData.append(
