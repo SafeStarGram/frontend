@@ -1,20 +1,11 @@
 import { useForm } from "react-hook-form";
 import ProfileImageUpload from "./ProfileImageUpload";
 import Button from "../shared/layout/Button";
-import type { IForm } from "../pages/Profile/Profile";
-
-interface IProfileData {
-  name: string;
-  phone: string;
-  radio: number;
-  department: number;
-  position: number;
-  image: string;
-}
+import type { IProfileData } from "../shared/hooks/useProfile";
 
 interface Props {
   defaultValues?: IProfileData;
-  onSubmit: (data: IForm) => void;
+  onSubmit: (data: IProfileData) => void;
 }
 
 export default function ProfileForm({ defaultValues, onSubmit }: Props) {
@@ -22,12 +13,12 @@ export default function ProfileForm({ defaultValues, onSubmit }: Props) {
     defaultValues,
   });
 
+  const defaultImageUrl =
+    typeof defaultValues?.image === "string" ? defaultValues.image : null;
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <ProfileImageUpload
-        setValue={setValue}
-        defaultImage={defaultValues?.image}
-      />
+      <ProfileImageUpload setValue={setValue} defaultImage={defaultImageUrl} />
 
       <div className="border border-gray-300 p-3 rounded-2xl">
         <div className="font-bold mt-2">인적사항</div>

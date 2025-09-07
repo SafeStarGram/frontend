@@ -1,5 +1,15 @@
+// useProfile.ts
 import { useMutation, useQuery } from "@tanstack/react-query";
 import api from "../../shared/api/axiosInstance";
+
+export interface IProfileData {
+  name: string;
+  phone: string;
+  radio: number;
+  department: number;
+  position: number;
+  image: File | string | null;
+}
 
 export const useProfile = (userId: number) => {
   const { data, isLoading } = useQuery({
@@ -12,14 +22,16 @@ export const useProfile = (userId: number) => {
   });
   console.log(data);
 
-  const profileData = {
-    name: data.name,
-    phone: data.phoneNumber,
-    radio: Number(data.radioNumber),
-    department: Number(data.departmentId),
-    position: Number(data.positionId),
-    image: data.profilePhotoUrl,
-  };
+  const profileData: IProfileData | null = data
+    ? {
+        name: data.name || "",
+        phone: data.phoneNumber || "",
+        radio: Number(data.radioNumber) || 0,
+        department: Number(data.departmentId) || 1,
+        position: Number(data.positionId) || 1,
+        image: data.profilePhotoUrl || null,
+      }
+    : null;
 
   const mutation = useMutation({
     mutationFn: async (formData: FormData) => {

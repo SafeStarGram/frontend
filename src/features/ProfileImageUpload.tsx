@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { IoCamera } from "react-icons/io5";
-import type { IForm } from "../pages/Profile/Profile";
 import type { UseFormSetValue } from "react-hook-form";
+import type { IProfileData } from "../shared/hooks/useProfile";
 
 interface Props {
-  setValue: UseFormSetValue<IForm>;
+  setValue: UseFormSetValue<IProfileData>;
   defaultImage?: string | null;
 }
 

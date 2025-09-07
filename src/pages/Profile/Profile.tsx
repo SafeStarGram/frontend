@@ -1,26 +1,20 @@
+// Profile.tsx
 import Layout from "../../shared/layout/Layout";
 import Button from "../../shared/layout/Button";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../store/store";
 import { useProfile } from "../../shared/hooks/useProfile";
 import ProfileForm from "../../features/ProfileForm";
-
-export interface IForm {
-  name: string;
-  phone: string;
-  radio: number;
-  department: number;
-  position: number;
-  image: File | null;
-}
+import type { IProfileData } from "../../shared/hooks/useProfile";
 
 export default function Profile() {
   const userId = useSelector((state: RootState) => state.user.userId);
   const { profileData, isLoading, mutate } = useProfile(Number(userId));
 
   if (isLoading) return <div>로딩중...</div>;
+  if (!profileData) return <div>프로필 데이터를 불러올 수 없습니다.</div>;
 
-  const handleSubmit = (data: IForm) => {
+  const handleSubmit = (data: IProfileData) => {
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("phone", data.phone);
