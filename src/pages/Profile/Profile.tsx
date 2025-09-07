@@ -28,7 +28,7 @@ export default function Profile() {
     formData.append("department", data.department.toString());
     formData.append("position", data.position.toString());
     if (data.image) {
-      formData.append("image", data.image);
+      formData.append("file", data.image);
     }
     mutate(formData);
   };
@@ -41,7 +41,7 @@ export default function Profile() {
         text="현장 관리"
         className="rounded-2xl w-full"
         baseColor="black"
-        hoverColor="gray-700"
+        hoverColor="black"
       />
     </Layout>
   );
