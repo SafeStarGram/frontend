@@ -1,9 +1,9 @@
 // import axios from "axios";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import Button from "../../shared/layout/Button";
 import image from "../../assets/safestargram.png";
-import axios from "axios";
+import { useSignUp } from "../../shared/hooks/useSignUp";
 
 interface FormData {
   name: string;
@@ -19,27 +19,7 @@ export default function SignUp() {
     formState: { isValid, errors },
   } = useForm<FormData>({ mode: "onChange" });
 
-  const navigate = useNavigate();
-
-  const onSubmit = async (data: FormData) => {
-    try {
-      const res = await axios.post(
-        "https://chan23.duckdns.org/safe_api/auth/join",
-        {
-          name: data.name,
-          email: data.email,
-          password: data.password,
-        }
-      );
-      console.log("회원가입 성공", res);
-      navigate("/login");
-    } catch (e) {
-      console.error("회원가입 실패", e);
-      alert("서버 에러가 발생했습니다. 다시 시도해주세요.");
-    }
-
-    console.log(data);
-  };
+  const { mutate: signUp, isPending } = useSignUp();
 
   return (
     <div className="flex flex-col items-center justify-center gap-3 min-h-screen bg-gray-50 py-10">
@@ -50,7 +30,7 @@ export default function SignUp() {
       </div>
       <form
         noValidate
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit((data) => signUp(data))}
         className="flex flex-col gap-3 w-full max-w-sm"
       >
         <label htmlFor="name">이름</label>
@@ -111,7 +91,7 @@ export default function SignUp() {
         )}
         <Button
           disabled={!isValid}
-          text="가입하기"
+          text={isPending ? "가입 중..." : "가입하기"}
           className=" rounded-full font-bold mt-5 "
         />
       </form>
