@@ -1,11 +1,8 @@
-import axios from "axios";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router";
-import { setAccessToken } from "../../store/authSlice";
+import { Link } from "react-router";
 import Button from "../../shared/layout/Button";
 import image from "../../assets/safestargram.png";
-import { setUserId } from "../../store/userSlice";
+import { useLogin } from "../../shared/hooks/useLogin";
 
 interface FormData {
   email: string;
@@ -16,37 +13,10 @@ export default function Login() {
   const {
     register,
     handleSubmit,
-    setError,
     formState: { isValid, errors },
   } = useForm<FormData>({ mode: "onSubmit" });
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const onSubmit = async (data: FormData) => {
-    try {
-      const res = await axios.post(
-        "https://chan23.duckdns.org/safe_api/auth/login",
-        data,
-        { withCredentials: true }
-      );
-      dispatch(setAccessToken(res.data.accessToken));
-      dispatch(setUserId(res.data.userId));
-      navigate("/");
-      console.log("로그인 성공", res);
-    } catch (e) {
-      if (axios.isAxiosError(e)) {
-        if (e.response?.status === 401) {
-          setError("password", {
-            type: "server",
-            message: "이메일 또는 비밀번호가 올바르지 않습니다.",
-          });
-        } else {
-          alert("서버 에러가 발생했습니다. 다시 시도해주세요.");
-        }
-      } else {
-        console.error("알 수 없는 에러:", e);
-      }
-    }
-  };
+
+  const { mutate: login, isPending } = useLogin();
 
   return (
     <div className="flex flex-col items-center justify-center gap-3 min-h-screen bg-gray-50 py-10">
@@ -54,7 +24,7 @@ export default function Login() {
       <div className="text-3xl text-brand font-bold mb-10">세이프스타그램</div>
       <form
         noValidate
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit((data) => login(data))}
         className="flex flex-col gap-3 w-full max-w-sm"
       >
         <label htmlFor="email">이메일</label>
@@ -91,7 +61,7 @@ export default function Login() {
         )}
         <Button
           disabled={!isValid}
-          text="로그인"
+          text={isPending ? "로그인 중..." : "로그인"}
           className="rounded-full font-bold mt-5"
         />
       </form>
