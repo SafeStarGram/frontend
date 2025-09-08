@@ -21,6 +21,7 @@ export const useProfile = (userId: number) => {
     enabled: !!userId,
   });
   console.log(data);
+  console.log(isLoading);
 
   const profileData: IProfileData | null = data
     ? {
