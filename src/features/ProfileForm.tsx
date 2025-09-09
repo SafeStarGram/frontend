@@ -39,7 +39,7 @@ export default function ProfileForm({ defaultValues, onSubmit }: Props) {
           <div className="flex gap-2">
             <input
               className="rounded-xl border border-gray-300 p-2 w-2/3"
-              placeholder="010-1234-5678"
+              placeholder="01012345678"
               {...register("phone")}
             />
             <input

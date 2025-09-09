@@ -3,6 +3,10 @@ import { Link } from "react-router";
 import Button from "../../shared/layout/Button";
 import image from "../../assets/safestargram.png";
 import { useLogin } from "../../shared/hooks/useLogin";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { clearAccessToken } from "../../store/authSlice";
+import { clearUserId } from "../../store/userSlice";
 
 interface FormData {
   email: string;
@@ -15,8 +19,14 @@ export default function Login() {
     handleSubmit,
     formState: { isValid, errors },
   } = useForm<FormData>({ mode: "onSubmit" });
+  const dispatch = useDispatch();
 
   const { mutate: login, isPending } = useLogin();
+
+  useEffect(() => {
+    dispatch(clearAccessToken());
+    dispatch(clearUserId());
+  }, [dispatch]);
 
   return (
     <div className="flex flex-col items-center justify-center gap-3 min-h-screen bg-gray-50 py-10">

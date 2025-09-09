@@ -1,9 +1,12 @@
-// import axios from "axios";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
 import Button from "../../shared/layout/Button";
 import image from "../../assets/safestargram.png";
 import { useSignUp } from "../../shared/hooks/useSignUp";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { clearAccessToken } from "../../store/authSlice";
+import { clearUserId } from "../../store/userSlice";
 
 interface FormData {
   name: string;
@@ -19,7 +22,14 @@ export default function SignUp() {
     formState: { isValid, errors },
   } = useForm<FormData>({ mode: "onChange" });
 
+  const dispatch = useDispatch();
+
   const { mutate: signUp, isPending } = useSignUp();
+
+  useEffect(() => {
+    dispatch(clearAccessToken());
+    dispatch(clearUserId());
+  }, [dispatch]);
 
   return (
     <div className="flex flex-col items-center justify-center gap-3 min-h-screen bg-gray-50 py-10">

@@ -1,4 +1,3 @@
-// Profile.tsx - 저장시 토스트 중복 방지
 import Layout from "../../shared/layout/Layout";
 import Button from "../../shared/layout/Button";
 import { useSelector } from "react-redux";
@@ -19,10 +18,8 @@ export default function Profile() {
     isSuccess: mutationSuccess,
     isPending: mutationLoading,
   } = useProfile(Number(userId));
-
   // 저장 중인지 추적하는 ref
   const isSaving = useRef(false);
-
   // 프로필 저장 성공 토스트
   useEffect(() => {
     if (mutationSuccess) {
@@ -66,8 +63,8 @@ export default function Profile() {
     formData.append("name", data.name);
     formData.append("phone", data.phone);
     formData.append("radio", data.radio.toString());
-    formData.append("department", data.department.toString());
-    formData.append("position", data.position.toString());
+    formData.append("department", data.department);
+    formData.append("position", data.position);
     if (data.image) {
       formData.append("file", data.image);
     }
