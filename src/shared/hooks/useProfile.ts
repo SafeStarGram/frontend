@@ -10,16 +10,15 @@ export interface IProfileData {
   image: File | string | null;
 }
 
-export const useProfile = (userId: number) => {
+export const useProfile = () => {
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
     queryKey: ["profile"],
     queryFn: async () => {
-      const res = await api.get("profile/me", { params: { userId } });
+      const res = await api.get("profile/me");
       return res.data;
     },
-    enabled: !!userId,
   });
 
   const profileData: IProfileData | null = data
@@ -27,8 +26,8 @@ export const useProfile = (userId: number) => {
         name: data.name || "",
         phone: data.phoneNumber || "",
         radio: Number(data.radioNumber) || 0,
-        department: data.departmentId || "1",
-        position: data.positionId || "1",
+        department: data.department || "1",
+        position: data.position || "1",
         image: data.profilePhotoUrl || null,
       }
     : null;
@@ -36,7 +35,6 @@ export const useProfile = (userId: number) => {
   const mutation = useMutation({
     mutationFn: async (formData: FormData) => {
       return await api.patch("profile/me", formData, {
-        params: { userId },
         headers: { "Content-Type": "multipart/form-data" },
       });
     },
@@ -45,6 +43,5 @@ export const useProfile = (userId: number) => {
       queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
   });
-
   return { profileData, isLoading, ...mutation };
 };

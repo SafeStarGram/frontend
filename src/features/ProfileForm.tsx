@@ -42,7 +42,6 @@ export default function ProfileForm({ defaultValues, onSubmit }: Props) {
         radio: defaultValues.radio || 0,
         department: defaultValues.department || "1",
         position: defaultValues.position || "1",
-        image: defaultValues.image || null,
       });
     }
   }, [defaultValues, reset]);
@@ -82,7 +81,7 @@ export default function ProfileForm({ defaultValues, onSubmit }: Props) {
             />
             <input
               className="rounded-xl border border-gray-300 p-2 w-1/3"
-              placeholder="# 9"
+              placeholder="1"
               {...register("radio")}
             />
           </div>
