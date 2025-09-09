@@ -8,6 +8,7 @@ interface IProps {
   lowerArea: string;
   uploadTime: string;
   score: number;
+  photoUrl: string;
 }
 
 export default function Noti({
@@ -16,12 +17,17 @@ export default function Noti({
   lowerArea,
   uploadTime,
   score,
+  photoUrl,
 }: IProps) {
   return (
     <div className="flex border border-gray-300 rounded-md p-5 items-center justify-around gap-5">
       <div className="w-32 h-32 overflow-hidden">
         <img
-          src="https://imagescdn.gettyimagesbank.com/500/202202/jv12533599.jpg"
+          src={
+            photoUrl
+              ? photoUrl
+              : "https://imagescdn.gettyimagesbank.com/500/202202/jv12533599.jpg"
+          }
           className="object-cover object-center h-full w-full rounded-md"
         />
       </div>
