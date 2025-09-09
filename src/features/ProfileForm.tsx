@@ -2,23 +2,61 @@ import { useForm } from "react-hook-form";
 import ProfileImageUpload from "./ProfileImageUpload";
 import Button from "../shared/layout/Button";
 import type { IProfileData } from "../shared/hooks/useProfile";
+import { useEffect } from "react";
 
 interface Props {
   defaultValues?: IProfileData;
   onSubmit: (data: IProfileData) => void;
 }
 
+const departments = [
+  { value: 1, text: "공사" },
+  { value: 2, text: "공무" },
+  { value: 3, text: "관리" },
+  { value: 4, text: "보건" },
+  { value: 5, text: "설비" },
+  { value: 6, text: "안전" },
+  { value: 7, text: "전기" },
+  { value: 8, text: "품질" },
+];
+
+const positions = [
+  { value: 1, text: "부장" },
+  { value: 2, text: "차장" },
+  { value: 3, text: "과장" },
+  { value: 4, text: "대리" },
+  { value: 5, text: "주임" },
+  { value: 6, text: "사원" },
+];
+
 export default function ProfileForm({ defaultValues, onSubmit }: Props) {
-  const { register, handleSubmit, setValue } = useForm<IProfileData>({
+  const { register, handleSubmit, setValue, reset } = useForm<IProfileData>({
     defaultValues,
   });
+
+  useEffect(() => {
+    if (defaultValues) {
+      reset({
+        name: defaultValues.name || "",
+        phone: defaultValues.phone || "",
+        radio: defaultValues.radio || 0,
+        department: defaultValues.department || "1",
+        position: defaultValues.position || "1",
+        image: defaultValues.image || null,
+      });
+    }
+  }, [defaultValues, reset]);
 
   const defaultImageUrl =
     typeof defaultValues?.image === "string" ? defaultValues.image : null;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <ProfileImageUpload setValue={setValue} defaultImage={defaultImageUrl} />
+      <ProfileImageUpload
+        setValue={setValue}
+        defaultImage={defaultImageUrl}
+        key={defaultImageUrl}
+      />
 
       <div className="border border-gray-300 p-3 rounded-2xl">
         <div className="font-bold mt-2">인적사항</div>
@@ -58,25 +96,21 @@ export default function ProfileForm({ defaultValues, onSubmit }: Props) {
               {...register("department")}
               className="rounded-xl border border-gray-300 w-2/3 p-2"
             >
-              <option value="1">공사</option>
-              <option value="2">공무</option>
-              <option value="3">관리</option>
-              <option value="4">보건</option>
-              <option value="5">설비</option>
-              <option value="6">안전</option>
-              <option value="7">전기</option>
-              <option value="8">품질</option>
+              {departments.map((department) => (
+                <option value={department.value} key={department.value}>
+                  {department.text}
+                </option>
+              ))}
             </select>
             <select
               {...register("position")}
               className="rounded-xl border border-gray-300 w-1/3 p-2"
             >
-              <option value="1">부장</option>
-              <option value="2">차장</option>
-              <option value="3">과장</option>
-              <option value="4">대리</option>
-              <option value="5">주임</option>
-              <option value="6">사원</option>
+              {positions.map((position) => (
+                <option value={position.value} key={position.value}>
+                  {position.text}
+                </option>
+              ))}
             </select>
           </div>
         </div>
