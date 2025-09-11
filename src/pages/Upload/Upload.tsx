@@ -8,6 +8,8 @@ import { FaRegUserCircle } from "react-icons/fa";
 import { IoLocationOutline } from "react-icons/io5";
 import { CiWarning } from "react-icons/ci";
 import { useState } from "react";
+import { useProfile, type IProfileData } from "../../shared/hooks/useProfile";
+import api from "../../shared/api/axiosInstance";
 
 interface IForm {
   image: File | null;
@@ -18,8 +20,42 @@ interface IForm {
   score: number;
 }
 
+const departments = [
+  { value: 1, text: "공사" },
+  { value: 2, text: "공무" },
+  { value: 3, text: "관리" },
+  { value: 4, text: "보건" },
+  { value: 5, text: "설비" },
+  { value: 6, text: "안전" },
+  { value: 7, text: "전기" },
+  { value: 8, text: "품질" },
+];
+
+const positions = [
+  { value: 1, text: "부장" },
+  { value: 2, text: "차장" },
+  { value: 3, text: "과장" },
+  { value: 4, text: "대리" },
+  { value: 5, text: "주임" },
+  { value: 6, text: "사원" },
+];
+
+const getUserInfo = (data: IProfileData | null) => {
+  if (!data) return null;
+  const { name, department, position } = data;
+  const de = departments.find((d) => d.value === Number(department));
+  const pos = positions.find((p) => p.value === Number(position));
+  return (
+    <div>
+      {name} ({de?.text} {pos?.text})
+    </div>
+  );
+};
+
 export default function Upload() {
   const { register, handleSubmit, setValue } = useForm<IForm>();
+  const { profileData } = useProfile();
+
   const time = useCurrentTime();
 
   const onSubmit = (data: IForm) => {
@@ -33,10 +69,9 @@ export default function Upload() {
     formData.append("description", data.description);
     formData.append("score", String(data.score));
 
-    // 예시: axios로 전송
-    // axios.post("/api/upload", formData, {
-    //   headers: { "Content-Type": "multipart/form-data" }
-    // });
+    api.post("api/posts", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
 
     console.log([...formData]); // 실제 들어간 값 확인 가능
   };
@@ -133,7 +168,7 @@ export default function Upload() {
             <div>
               {/* 유저정보의 이름과 직책 가져오기  */}
               <div className="text-gray-500 text-sm">보고자</div>
-              <div>김 안전 (공사 과장)</div>
+              {getUserInfo(profileData)}
             </div>
           </div>
           <div className="flex items-center border rounded-2xl border-gray-300 p-5 gap-5">
