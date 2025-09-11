@@ -1,7 +1,5 @@
 import Layout from "../../shared/layout/Layout";
 import Button from "../../shared/layout/Button";
-import { useSelector } from "react-redux";
-import type { RootState } from "../../store/store";
 import { useProfile } from "../../shared/hooks/useProfile";
 import ProfileForm from "../../features/ProfileForm";
 import type { IProfileData } from "../../shared/hooks/useProfile";
@@ -9,7 +7,6 @@ import { useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 
 export default function Profile() {
-  const userId = useSelector((state: RootState) => state.user.userId);
   const {
     profileData,
     isLoading: queryLoading,
@@ -17,7 +14,7 @@ export default function Profile() {
     mutate,
     isSuccess: mutationSuccess,
     isPending: mutationLoading,
-  } = useProfile(Number(userId));
+  } = useProfile();
   // 저장 중인지 추적하는 ref
   const isSaving = useRef(false);
   // 프로필 저장 성공 토스트
@@ -61,14 +58,13 @@ export default function Profile() {
   const handleSubmit = (data: IProfileData) => {
     const formData = new FormData();
     formData.append("name", data.name);
-    formData.append("phone", data.phone);
-    formData.append("radio", data.radio.toString());
+    formData.append("phoneNumber", data.phone);
+    formData.append("radioNumber", String(data.radio));
     formData.append("department", data.department);
     formData.append("position", data.position);
     if (data.image) {
       formData.append("file", data.image);
     }
-
     isSaving.current = true;
     mutate(formData);
   };
