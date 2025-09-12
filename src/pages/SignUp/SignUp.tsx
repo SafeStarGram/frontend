@@ -1,9 +1,8 @@
-// import axios from "axios";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import Button from "../../shared/layout/Button";
 import image from "../../assets/safestargram.png";
-import axios from "axios";
+import api from "../../shared/api/axiosInstance";
 
 interface FormData {
   name: string;
@@ -23,8 +22,8 @@ export default function SignUp() {
 
   const onSubmit = async (data: FormData) => {
     try {
-      const res = await axios.post(
-        "https://chan23.duckdns.org/safe_api/auth/join",
+      const res = await api.post(
+        "/auth/join",
         {
           name: data.name,
           email: data.email,

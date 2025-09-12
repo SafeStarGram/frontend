@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Layout from "../../shared/layout/Layout";
+import api from "../../shared/api/axiosInstance";
 
 export default function HomePage() {
   const [notificationCount] = useState(9);
@@ -7,6 +8,8 @@ export default function HomePage() {
   const handleBack = () => {
     console.log("뒤로 가기");
   };
+
+  console.log(api.defaults.baseURL);
 
   return (
     <Layout

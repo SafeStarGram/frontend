@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router";
@@ -6,6 +5,7 @@ import { setAccessToken } from "../../store/authSlice";
 import Button from "../../shared/layout/Button";
 import image from "../../assets/safestargram.png";
 import { setUserId } from "../../store/userSlice";
+import api from "../../shared/api/axiosInstance";
 
 interface FormData {
   email: string;
@@ -23,26 +23,22 @@ export default function Login() {
   const navigate = useNavigate();
   const onSubmit = async (data: FormData) => {
     try {
-      const res = await axios.post(
-        "https://chan23.duckdns.org/safe_api/auth/login",
-        data,
-        { withCredentials: true }
+      const res = await api.post(
+        "/auth/login",
+        data
       );
       dispatch(setAccessToken(res.data.accessToken));
       dispatch(setUserId(res.data.userId));
       navigate("/");
       console.log("로그인 성공", res);
-    } catch (e) {
-      if (axios.isAxiosError(e)) {
-        if (e.response?.status === 401) {
-          setError("password", {
-            type: "server",
-            message: "이메일 또는 비밀번호가 올바르지 않습니다.",
-          });
-        } else {
-          alert("서버 에러가 발생했습니다. 다시 시도해주세요.");
-        }
+    } catch (e: any) {
+      if (e.response?.status === 401) {
+        setError("password", {
+          type: "server",
+          message: "이메일 또는 비밀번호가 올바르지 않습니다.",
+        });
       } else {
+        alert("서버 에러가 발생했습니다. 다시 시도해주세요.");
         console.error("알 수 없는 에러:", e);
       }
     }

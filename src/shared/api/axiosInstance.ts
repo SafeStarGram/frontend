@@ -1,9 +1,10 @@
 import axios from "axios";
+export const BASE_URL = import.meta.env.VITE_BASE_URL;
 import { store } from "../../store/store";
 import { clearAccessToken, setAccessToken } from "../../store/authSlice";
 
 const api = axios.create({
-  baseURL: "https://chan23.duckdns.org/safe_api/",
+  baseURL: BASE_URL || "https://chan23.duckdns.org/safe_api/",
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
