@@ -8,7 +8,6 @@ export interface IProfileData {
   department: string;
   position: string;
   image: File | string | null;
-  userId: number;
 }
 
 export const useProfile = () => {
@@ -30,7 +29,6 @@ export const useProfile = () => {
         department: data.department || "1",
         position: data.position || "1",
         image: data.profilePhotoUrl || null,
-        userId: data.userId || null,
       }
     : null;
 

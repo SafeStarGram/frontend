@@ -1,7 +1,5 @@
-import type { ReactNode } from "react";
-
 interface ButtonProps {
-  children: ReactNode;
+  text: string;
   className: string;
   disabled: boolean;
   baseColor?: string;
@@ -10,7 +8,7 @@ interface ButtonProps {
 }
 
 export default function Button({
-  children,
+  text,
   disabled,
   className,
   baseColor = "brand",
@@ -21,8 +19,6 @@ export default function Button({
     switch (color) {
       case "black":
         return "bg-black";
-      case "red":
-        return "bg-red-500";
       default:
         return "bg-brand";
     }
@@ -31,8 +27,6 @@ export default function Button({
     switch (color) {
       case "black":
         return "hover:bg-gray-700";
-      case "red":
-        return "hover:bg-red-400";
       default:
         return "hover:bg-orange-300";
     }
@@ -49,7 +43,7 @@ export default function Button({
           : `hover:cursor-pointer ${getHoverColorClass(hoverColor)}`
       }`}
     >
-      {children}
+      {text}
     </button>
   );
 }
