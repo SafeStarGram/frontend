@@ -7,7 +7,10 @@ import Button from "../../shared/layout/Button";
 import { LuPencil } from "react-icons/lu";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { useProfile } from "../../shared/hooks/useProfile";
-import Outline from "../../components/Upload/Outline";
+import Outline from "../../components/Detail/Outline";
+import Comment from "../../components/Detail/Comment";
+import Action from "../../components/Detail/Action";
+import Evaluation from "../../components/Detail/Evaluation";
 
 export default function Detail() {
   const { postId } = useParams();
@@ -54,6 +57,9 @@ export default function Detail() {
             </Button>
           </div>
           <Outline data={data} profileData={profileData} />
+          <Action />
+          <Evaluation score={data.reporterRisk} />
+          <Comment />
         </Layout>
       )}
     </>
