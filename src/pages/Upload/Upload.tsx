@@ -63,17 +63,15 @@ export default function Upload() {
     if (data.image) {
       formData.append("image", data.image); // File 객체
     }
-    formData.append("upperArea", data.upperArea);
-    formData.append("lowerArea", data.lowerArea);
+    formData.append("areaId", data.upperArea);
+    formData.append("subAreaId", data.lowerArea);
     formData.append("title", data.title);
-    formData.append("description", data.description);
-    formData.append("score", String(data.score));
-
+    formData.append("content", data.description);
+    formData.append("reporterRisk", String(data.score));
+    console.log([...formData]); // 실제 들어간 값 확인 가능
     api.post("api/posts", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
-
-    console.log([...formData]); // 실제 들어간 값 확인 가능
   };
 
   const [preview, setPreview] = useState<string | null>(null);
@@ -143,9 +141,9 @@ export default function Upload() {
                 id="upperArea"
                 {...register("upperArea")}
               >
-                <option>1블록</option>
-                <option>2블록</option>
-                <option>3블록</option>
+                <option value={1}>1블록</option>
+                <option value={2}>2블록</option>
+                <option value={3}>3블록</option>
               </select>
             </div>
             <div className="flex flex-col w-1/3">
@@ -157,9 +155,9 @@ export default function Upload() {
                 id="lowerArea"
                 {...register("lowerArea")}
               >
-                <option>101동</option>
-                <option>102동</option>
-                <option>103동</option>
+                <option value={1}>101동</option>
+                <option value={2}>102동</option>
+                <option value={3}>103동</option>
               </select>
             </div>
           </div>
@@ -201,19 +199,20 @@ export default function Upload() {
               className="border rounded-xl border-gray-500 p-2 w-full"
               {...register("score")}
             >
-              <option>5점</option>
-              <option>4점</option>
-              <option>3점</option>
-              <option>2점</option>
-              <option>1점</option>
+              <option value={5}>5점</option>
+              <option value={4}>4점</option>
+              <option value={3}>3점</option>
+              <option value={2}>2점</option>
+              <option value={1}>1점</option>
             </select>
           </div>
         </div>
         <Button
           disabled={false}
-          text="등록"
           className="bg-brand hover:cursor-pointer hover:bg-orange-300 transition rounded-2xl mt-5 w-full border-none"
-        />
+        >
+          등록
+        </Button>
       </form>
     </Layout>
   );

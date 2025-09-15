@@ -1,7 +1,7 @@
 import Layout from "../../shared/layout/Layout";
 import Button from "../../shared/layout/Button";
 import { useProfile } from "../../shared/hooks/useProfile";
-import ProfileForm from "../../features/ProfileForm";
+import ProfileForm from "../../components/ProfileForm";
 import type { IProfileData } from "../../shared/hooks/useProfile";
 import { useEffect, useRef } from "react";
 import { toast } from "react-toastify";
@@ -74,11 +74,12 @@ export default function Profile() {
       <ProfileForm defaultValues={profileData} onSubmit={handleSubmit} />
       <Button
         disabled={mutationLoading}
-        text="현장 관리"
         className="rounded-2xl w-full"
         baseColor="black"
         hoverColor="black"
-      />
+      >
+        현장 관리
+      </Button>
     </Layout>
   );
 }

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import Layout from "../../shared/layout/Layout";
 import Noti from "../../shared/layout/Noti";
 import api from "../../shared/api/axiosInstance";
-import { SyncLoader } from "react-spinners";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 interface INotification {
   title: string;
@@ -46,12 +46,7 @@ export default function Notifications() {
     <Layout title="최근 위험 사진 보고" activeTab="notifications">
       <div className="flex flex-col gap-5">
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center mt-10">
-            <SyncLoader color="#ff7f4c" />
-            <span className="text-brand mt-10">
-              데이터를 불러오는 중입니다 ...
-            </span>
-          </div>
+          <LoadingSpinner />
         ) : (
           data?.map((noti) => (
             <Noti
