@@ -74,12 +74,11 @@ export default function Profile() {
       <ProfileForm defaultValues={profileData} onSubmit={handleSubmit} />
       <Button
         disabled={mutationLoading}
+        text="현장 관리"
         className="rounded-2xl w-full"
         baseColor="black"
         hoverColor="black"
-      >
-        현장 관리
-      </Button>
+      />
     </Layout>
   );
 }
