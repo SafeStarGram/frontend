@@ -1,33 +1,14 @@
 import { useForm } from "react-hook-form";
 import ProfileImageUpload from "./ProfileImageUpload";
-import Button from "../shared/layout/Button";
-import type { IProfileData } from "../shared/hooks/useProfile";
+import Button from "../../shared/layout/Button";
+import type { IProfileData } from "../../shared/hooks/useProfile";
 import { useEffect } from "react";
+import { departments, positions } from "../../shared/config/constants";
 
 interface Props {
   defaultValues?: IProfileData;
   onSubmit: (data: IProfileData) => void;
 }
-
-const departments = [
-  { value: 1, text: "공사" },
-  { value: 2, text: "공무" },
-  { value: 3, text: "관리" },
-  { value: 4, text: "보건" },
-  { value: 5, text: "설비" },
-  { value: 6, text: "안전" },
-  { value: 7, text: "전기" },
-  { value: 8, text: "품질" },
-];
-
-const positions = [
-  { value: 1, text: "부장" },
-  { value: 2, text: "차장" },
-  { value: 3, text: "과장" },
-  { value: 4, text: "대리" },
-  { value: 5, text: "주임" },
-  { value: 6, text: "사원" },
-];
 
 export default function ProfileForm({ defaultValues, onSubmit }: Props) {
   const { register, handleSubmit, setValue, reset } = useForm<IProfileData>({
@@ -115,11 +96,9 @@ export default function ProfileForm({ defaultValues, onSubmit }: Props) {
         </div>
       </div>
 
-      <Button
-        text="프로필 저장"
-        disabled={false}
-        className="rounded-2xl w-full my-3"
-      />
+      <Button disabled={false} className="rounded-2xl w-full my-3">
+        프로필 저장
+      </Button>
     </form>
   );
 }

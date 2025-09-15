@@ -69,11 +69,10 @@ export default function Login() {
         {errors.password && (
           <p className="text-red-500">{errors.password.message}</p>
         )}
-        <Button
-          disabled={!isValid}
+        <Button disabled={!isValid} className="rounded-full font-bold mt-5">
+          {" "}
           text={isPending ? "로그인 중..." : "로그인"}
-          className="rounded-full font-bold mt-5"
-        />
+        </Button>
       </form>
       <div className="flex gap-3">
         <div>계정이 없으신가요?</div>

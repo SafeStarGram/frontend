@@ -10,6 +10,8 @@ import { CiWarning } from "react-icons/ci";
 import { useState } from "react";
 import { useProfile, type IProfileData } from "../../shared/hooks/useProfile";
 import api from "../../shared/api/axiosInstance";
+import { findDepartment, findPosition } from "../../shared/config/constants";
+import { useNavigate } from "react-router";
 
 interface IForm {
   image: File | null;
@@ -20,34 +22,12 @@ interface IForm {
   score: number;
 }
 
-const departments = [
-  { value: 1, text: "공사" },
-  { value: 2, text: "공무" },
-  { value: 3, text: "관리" },
-  { value: 4, text: "보건" },
-  { value: 5, text: "설비" },
-  { value: 6, text: "안전" },
-  { value: 7, text: "전기" },
-  { value: 8, text: "품질" },
-];
-
-const positions = [
-  { value: 1, text: "부장" },
-  { value: 2, text: "차장" },
-  { value: 3, text: "과장" },
-  { value: 4, text: "대리" },
-  { value: 5, text: "주임" },
-  { value: 6, text: "사원" },
-];
-
 const getUserInfo = (data: IProfileData | null) => {
   if (!data) return null;
   const { name, department, position } = data;
-  const de = departments.find((d) => d.value === Number(department));
-  const pos = positions.find((p) => p.value === Number(position));
   return (
     <div>
-      {name} ({de?.text} {pos?.text})
+      {name} ({findDepartment(department)} {findPosition(position)})
     </div>
   );
 };
@@ -55,7 +35,7 @@ const getUserInfo = (data: IProfileData | null) => {
 export default function Upload() {
   const { register, handleSubmit, setValue } = useForm<IForm>();
   const { profileData } = useProfile();
-
+  const navigate = useNavigate();
   const time = useCurrentTime();
 
   const onSubmit = (data: IForm) => {
@@ -72,6 +52,7 @@ export default function Upload() {
     api.post("api/posts", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
+    navigate("/notifications");
   };
 
   const [preview, setPreview] = useState<string | null>(null);

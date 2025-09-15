@@ -5,10 +5,9 @@ import api from "../../shared/api/axiosInstance";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import Button from "../../shared/layout/Button";
 import { LuPencil } from "react-icons/lu";
-import { MdDeleteOutline } from "react-icons/md";
-import { IoLocationOutline } from "react-icons/io5";
-import { FaRegCalendarAlt, FaRegUserCircle } from "react-icons/fa";
+import { FaRegTrashAlt } from "react-icons/fa";
 import { useProfile } from "../../shared/hooks/useProfile";
+import Outline from "../../components/Upload/Outline";
 
 export default function Detail() {
   const { postId } = useParams();
@@ -23,12 +22,10 @@ export default function Detail() {
   });
 
   const { profileData, isLoading } = useProfile();
-  console.log(profileData);
-
   console.log(data);
   return (
     <>
-      {isDataLoading ? (
+      {isDataLoading || isLoading ? (
         <Layout title="로딩 중..." activeTab="notifications">
           <LoadingSpinner />
         </Layout>
@@ -40,45 +37,23 @@ export default function Detail() {
             className="h-64 w-full"
           />
           <div className="flex w-full gap-3 my-3">
-            <Button disabled={false} className="rounded-md w-1/2">
+            <Button
+              disabled={profileData?.userId !== data.reporterId}
+              className="rounded-md w-1/2"
+            >
               <LuPencil /> 수정하기
             </Button>
             <Button
-              disabled={false}
+              disabled={profileData?.userId !== data.reporterId}
               className="rounded-md w-1/2"
               baseColor="red"
               hoverColor="red"
             >
-              <MdDeleteOutline />
+              <FaRegTrashAlt />
               삭제하기
             </Button>
           </div>
-          <h3>위험성 보고 개요</h3>
-          <div className="border rounded-md p-3">
-            <div className="flex items-center gap-3">
-              <IoLocationOutline className="text-gray-500 w-6 h-6" />
-              <div>
-                <div className="text-gray-500 text-sm">위치</div>
-                <div>
-                  {data.areaId} / {data.subAreaId}
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <FaRegUserCircle className="text-gray-500 w-6 h-6" />
-              <div>
-                <div className="text-gray-500 text-sm">보고자</div>
-                <div>{}</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <FaRegCalendarAlt className="text-gray-500 w-6 h-6" />
-              <div>
-                <div className="text-gray-500 text-sm">보고 시각</div>
-                <div>{data.createdAt}</div>
-              </div>
-            </div>
-          </div>
+          <Outline data={data} profileData={profileData} />
         </Layout>
       )}
     </>

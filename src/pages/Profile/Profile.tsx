@@ -1,7 +1,7 @@
 import Layout from "../../shared/layout/Layout";
 import Button from "../../shared/layout/Button";
 import { useProfile } from "../../shared/hooks/useProfile";
-import ProfileForm from "../../components/ProfileForm";
+import ProfileForm from "../../components/Profile/ProfileForm";
 import type { IProfileData } from "../../shared/hooks/useProfile";
 import { useEffect, useRef } from "react";
 import { toast } from "react-toastify";
