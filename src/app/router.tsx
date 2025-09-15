@@ -6,6 +6,7 @@ import Profile from "../pages/Profile/Profile";
 import Upload from "../pages/Upload/Upload";
 import Notifications from "../pages/Notifications/Notifications";
 import ProtectedRoute from "./ProtectedRoute";
+import Detail from "../pages/Detail/Detail";
 
 const router = createBrowserRouter([
   {
@@ -42,6 +43,15 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <Notifications />
+      </ProtectedRoute>
+    ),
+    children: [],
+  },
+  {
+    path: "/noti/:postId",
+    element: (
+      <ProtectedRoute>
+        <Detail />
       </ProtectedRoute>
     ),
     children: [],
