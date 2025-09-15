@@ -18,6 +18,14 @@ export const positions = [
   { value: 6, text: "사원" },
 ];
 
+export const scores = [
+  { value: 5, text: "사원" },
+  { value: 4, text: "(수용 가능한 위험성, 3일 내 처리)" },
+  { value: 3, text: "(수용 불가한 위험성이나, 긴급하지 않음)" },
+  { value: 2, text: "사원" },
+  { value: 1, text: "사원" },
+];
+
 export const findDepartment = (department: string | undefined) => {
   if (!department) return null;
   return departments.find((d) => d.value === Number(department))?.text;
