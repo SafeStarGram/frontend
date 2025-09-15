@@ -100,8 +100,7 @@ export default function SignUp() {
           <p className="text-red-500">{errors.checkPassword.message}</p>
         )}
         <Button disabled={!isValid} className=" rounded-full font-bold mt-5 ">
-          {" "}
-          text={isPending ? "가입 중..." : "가입하기"}
+          {isPending ? "가입 중..." : "가입하기"}
         </Button>
       </form>
       <div className="flex gap-3">

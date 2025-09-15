@@ -19,14 +19,13 @@ export default function Detail() {
     return res.data;
   };
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading: isDataLoading } = useQuery({
     queryKey: ["detail", { postId }],
     queryFn: getData,
   });
 
   const { profileData, isLoading } = useProfile();
   console.log(data);
-  if (isLoading) return <>wait</>;
   return (
     <>
       {isDataLoading || isLoading ? (
