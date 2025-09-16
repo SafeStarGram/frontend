@@ -1,10 +1,13 @@
 import type { ManagementArea } from '../types';
+import { useNavigate } from "react-router";
 
 interface AreaListProps {
   areas: ManagementArea[];
 }
 
 export default function AreaList({ areas }: AreaListProps) {
+  const navigate = useNavigate();
+
   return (
     <div className="space-y-4">
       <h3 className="text-xl font-bold text-gray-900">관리 구역 일람</h3>
@@ -19,8 +22,11 @@ export default function AreaList({ areas }: AreaListProps) {
                 className="w-full h-48 object-cover rounded-xl"
               />
             </div>
-            <button className="w-full bg-gray-100 hover:bg-gray-200 transition rounded-2xl py-4 px-6 flex items-center justify-center text-gray-700 font-medium cursor-pointer">
-              자세히 보기 
+            <button 
+              onClick={() => navigate("/areadetail")}
+              className="w-full bg-gray-100 hover:bg-gray-200 transition rounded-2xl py-4 px-6 flex items-center justify-center text-gray-700 font-medium cursor-pointer"
+            >
+              자세히 보기
               <span className="ml-2 text-xl">›</span>
             </button>
           </div>

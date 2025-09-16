@@ -9,6 +9,8 @@ import Management from "../pages/Management";
 import ProtectedRoute from "./ProtectedRoute";
 import Detail from "../pages/Detail/Detail";
 import AddArea from "../pages/AddArea";
+import Statistics from "../pages/Statistics";
+import AreaDetail from "../pages/AreaDetail";
 
 const router = createBrowserRouter([
   {
@@ -72,6 +74,24 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <AddArea />
+      </ProtectedRoute>
+    ),
+    children: [],
+  },
+  {
+    path: "/stat",
+    element: (
+      <ProtectedRoute>
+        <Statistics />
+      </ProtectedRoute>
+    ),
+    children: [],
+  },
+  {
+    path: "/areadetail",
+    element: (
+      <ProtectedRoute>
+        <AreaDetail />
       </ProtectedRoute>
     ),
     children: [],
