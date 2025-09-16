@@ -5,6 +5,7 @@ import HomePage from "../pages/HomePage/HomePage";
 import Profile from "../pages/Profile/Profile";
 import Upload from "../pages/Upload/Upload";
 import Notifications from "../pages/Notifications/Notifications";
+import Management from "../pages/Management";
 import ProtectedRoute from "./ProtectedRoute";
 import Detail from "../pages/Detail/Detail";
 
@@ -43,6 +44,15 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <Notifications />
+      </ProtectedRoute>
+    ),
+    children: [],
+  },
+  {
+    path: "/management",
+    element: (
+      <ProtectedRoute>
+        <Management />
       </ProtectedRoute>
     ),
     children: [],

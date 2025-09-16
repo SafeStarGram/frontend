@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import api from "../api/axiosInstance";
 import { useDispatch } from "react-redux";
 import { setAccessToken } from "../../store/authSlice";
 import { setUserId } from "../../store/userSlice";
@@ -16,11 +16,7 @@ export function useLogin() {
 
   return useMutation({
     mutationFn: async (data: LoginData) => {
-      const res = await axios.post(
-        "https://chan23.duckdns.org/safe_api/auth/login",
-        data,
-        { withCredentials: true }
-      );
+      const res = await api.post("auth/login", data);
       return res.data;
     },
     onSuccess: (data) => {
@@ -28,8 +24,8 @@ export function useLogin() {
       dispatch(setUserId(data.userId));
       navigate("/");
     },
-    onError: (error) => {
-      if (axios.isAxiosError(error) && error.response?.status === 401) {
+    onError: (error: any) => {
+      if (error.response?.status === 401) {
         alert("이메일 또는 비밀번호가 올바르지 않습니다.");
       } else {
         alert("서버 에러가 발생했습니다. 다시 시도해주세요.");

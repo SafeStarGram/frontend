@@ -7,7 +7,7 @@ interface LayoutProps {
   title: string;
   showBackButton?: boolean;
   onBack?: () => void;
-  activeTab: "home" | "upload" | "notifications" | "profile";
+  activeTab: "home" | "upload" | "notifications" | "profile" | "management";
   notificationCount?: number;
 }
 
