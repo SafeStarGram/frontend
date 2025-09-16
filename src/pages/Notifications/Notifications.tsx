@@ -3,6 +3,7 @@ import Layout from "../../shared/layout/Layout";
 import Noti from "../../shared/layout/Noti";
 import api from "../../shared/api/axiosInstance";
 import { SyncLoader } from "react-spinners";
+import { changeTimeForm } from "../../shared/hooks/useCurrentTime";
 
 interface INotification {
   title: string;
@@ -25,23 +26,6 @@ export default function Notifications() {
   });
   console.log(data);
 
-  const changeTime = (time: string) => {
-    const date = new Date(time);
-
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-
-    let hours = date.getHours();
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    const ampm = hours >= 12 ? "PM" : "AM";
-
-    hours = hours % 12;
-    hours = hours ? hours : 12;
-
-    return `${year}-${month}-${day} ${hours}:${minutes} ${ampm}`;
-  };
-
   return (
     <Layout title="최근 위험 사진 보고" activeTab="notifications">
       <div className="flex flex-col gap-5">
@@ -60,7 +44,7 @@ export default function Notifications() {
               title={noti.title}
               upperArea={noti.areaId}
               lowerArea={noti.subAreaId}
-              uploadTime={changeTime(noti.createdAt)}
+              uploadTime={changeTimeForm(noti.createdAt)}
               score={Number(noti.reporterRisk)}
               photoUrl={noti.postPhotoUrl}
             />

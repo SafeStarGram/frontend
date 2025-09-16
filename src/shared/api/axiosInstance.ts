@@ -26,19 +26,26 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 401 && error.message === "TokenExpired") {
+    console.log(error);
+    if (
+      error.response?.status === 401 &&
+      error.response?.data.error === "Unauthorized"
+    ) {
       // access token이 만료되었을 경우
       try {
         const res = await api.post("auth/refresh", {});
+        console.log("res: ", res);
         const newAccessToken = res.data.accessToken;
         store.dispatch(setAccessToken(newAccessToken));
 
         // 실패한 요청 재시도
         const config = error.config;
+        console.log("config:", config);
         config.headers["Authorization"] = `Bearer ${newAccessToken}`;
         return api(config);
       } catch (e) {
         // refresh token도 만료된 경우
+        console.log("e:", e);
         store.dispatch(clearAccessToken());
         alert("로그인 세션이 만료되었습니다. 다시 로그인 해주세요.");
         window.location.href = "/login";
