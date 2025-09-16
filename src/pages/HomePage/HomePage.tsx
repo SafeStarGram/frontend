@@ -1,12 +1,9 @@
 import { useState } from "react";
 import Layout from "../../shared/layout/Layout";
+import ImageContainer from "../../components/Home/ImageContainer";
 
 export default function HomePage() {
   const [notificationCount] = useState(9);
-
-  const handleBack = () => {
-    console.log("뒤로 가기");
-  };
 
   return (
     <Layout
@@ -42,6 +39,7 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+      <ImageContainer />
     </Layout>
   );
 }

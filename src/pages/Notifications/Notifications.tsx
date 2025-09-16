@@ -5,7 +5,7 @@ import api from "../../shared/api/axiosInstance";
 import { SyncLoader } from "react-spinners";
 import { changeTimeForm } from "../../shared/hooks/useCurrentTime";
 
-interface INotification {
+export interface INotification {
   title: string;
   areaId: string;
   subAreaId: string;
