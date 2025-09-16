@@ -53,11 +53,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/management",
-    element: (
-      <ProtectedRoute>
-        <Management />
-      </ProtectedRoute>
-    ),
+    element: <Management />,
     children: [],
   },
   {
@@ -71,29 +67,17 @@ const router = createBrowserRouter([
   },
   {
     path: "/addarea",
-    element: (
-      <ProtectedRoute>
-        <AddArea />
-      </ProtectedRoute>
-    ),
+    element: <AddArea />,
     children: [],
   },
   {
     path: "/stat",
-    element: (
-      <ProtectedRoute>
-        <Statistics />
-      </ProtectedRoute>
-    ),
+    element: <Statistics />,
     children: [],
   },
   {
     path: "/areadetail",
-    element: (
-      <ProtectedRoute>
-        <AreaDetail />
-      </ProtectedRoute>
-    ),
+    element: <AreaDetail />,
     children: [],
   },
 ]);

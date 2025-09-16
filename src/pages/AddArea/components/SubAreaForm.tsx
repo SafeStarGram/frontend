@@ -1,28 +1,16 @@
 import Input from "../../../shared/layout/Input";
 import { LuMapPin, LuTrash2, LuCirclePlus } from "react-icons/lu";
+import { useAddAreaContext } from "../context/AddAreaContext";
 
-interface SubArea {
-  id: number;
-  name: string;
-}
-
-interface SubAreaFormProps {
-  subAreas: SubArea[];
-  newSubAreaName: string;
-  onSubAreaChange: (id: number, name: string) => void;
-  onRemoveSubArea: (id: number) => void;
-  onNewSubAreaNameChange: (value: string) => void;
-  onAddSubArea: () => void;
-}
-
-export default function SubAreaForm({ 
-  subAreas, 
-  newSubAreaName, 
-  onSubAreaChange, 
-  onRemoveSubArea, 
-  onNewSubAreaNameChange, 
-  onAddSubArea 
-}: SubAreaFormProps) {
+export default function SubAreaForm() {
+  const { 
+    subAreas, 
+    newSubAreaName, 
+    handleSubAreaChange, 
+    removeSubArea, 
+    setNewSubAreaName, 
+    addSubArea 
+  } = useAddAreaContext();
   return (
     <div className="bg-white rounded-2xl p-6 shadow-sm">
       <h3 className="text-lg font-semibold text-gray-600 mb-4">소구역</h3>
@@ -35,11 +23,11 @@ export default function SubAreaForm({
               <Input
                 type="text"
                 value={subArea.name}
-                onChange={(e) => onSubAreaChange(subArea.id, e.target.value)}
+                onChange={(e) => handleSubAreaChange(subArea.id, e.target.value)}
                 className="flex-1"
               />
               <button
-                onClick={() => onRemoveSubArea(subArea.id)}
+                onClick={() => removeSubArea(subArea.id)}
                 className="w-12 h-12 bg-red-500 hover:bg-red-600 text-white rounded-xl flex items-center justify-center transition-colors"
               >
                 <LuTrash2 className="w-5 h-5" />
@@ -51,18 +39,18 @@ export default function SubAreaForm({
           <div className="flex items-center space-x-3">
             <Input
               type="text"
-              placeholder="새로운 세부위치를 추가하세요"
+              placeholder="새로운 소구역을 추가하세요"
               value={newSubAreaName}
-              onChange={(e) => onNewSubAreaNameChange(e.target.value)}
+                onChange={(e) => setNewSubAreaName(e.target.value)}
               onKeyPress={(e) => {
                 if (e.key === "Enter") {
-                  onAddSubArea();
+                  addSubArea();
                 }
               }}
               className="flex-1"
             />
             <button
-              onClick={onAddSubArea}
+              onClick={addSubArea}
               className="w-12 h-12 bg-teal-500 hover:bg-teal-600 text-white rounded-xl flex items-center justify-center transition-colors"
             >
               <LuCirclePlus className="w-5 h-5" />

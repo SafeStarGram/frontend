@@ -1,12 +1,9 @@
 import { useRef } from "react";
 import { LuCirclePlus } from "react-icons/lu";
+import { useAddAreaContext } from "../context/AddAreaContext";
 
-interface ImageUploadProps {
-  imagePreview: string | null;
-  onImageSelect: (event: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-export default function ImageUpload({ imagePreview, onImageSelect }: ImageUploadProps) {
+export default function ImageUpload() {
+  const { imagePreview, handleImageSelect } = useAddAreaContext();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageClick = () => {
@@ -37,7 +34,7 @@ export default function ImageUpload({ imagePreview, onImageSelect }: ImageUpload
         ref={fileInputRef}
         type="file"
         accept="image/*"
-        onChange={onImageSelect}
+        onChange={handleImageSelect}
         className="hidden"
       />
     </div>
