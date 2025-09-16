@@ -5,11 +5,11 @@ import AreaList from "./components/AreaList";
 import StatsButton from "./components/StatsButton";
 import ManagerList from "./components/ManagerList";
 import { managementAreas } from "./data";
-import { useAdminUsers } from "../../shared/hooks/useAdminUsers";
+import { useManagerUsers } from "../../shared/hooks/useManagerUsers";
 
 export default function Management() {
-  const [notificationCount] = useState(9);
-  const { users, isLoading, error } = useAdminUsers();
+  const [notificationCount] = useState(9);   // 임시 알림 9 데이터
+  const { users, isLoading, error } = useManagerUsers();
 
   return (
     <Layout

@@ -5,9 +5,10 @@ import type { RootState } from "../../store/store";
 import { clearAccessToken } from "../../store/authSlice";
 import { clearUserId } from "../../store/userSlice";
 
-export const useAdminUsers = () => {
+export const useManagerUsers = () => {
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
   const dispatch = useDispatch();
+  
   
   // JWT 서명 오류 해결을 위해 토큰 완전 초기화
   const clearTokenAndRedirect = () => {
@@ -18,7 +19,7 @@ export const useAdminUsers = () => {
   };
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["admin-users"],
+    queryKey: ["manager-users", !!accessToken],
     queryFn: async () => {
       try {
         const res = await api.get("api/admin/users");
@@ -35,8 +36,8 @@ export const useAdminUsers = () => {
     retry: false, // JWT 오류 시 재시도 방지
   });
 
-  // 에러가 발생하면 토큰 초기화
-  if (error && !isLoading) {
+  // 토큰이 있을 때만 에러 발생 시 토큰 초기화
+  if (error && !isLoading && accessToken) {
     clearTokenAndRedirect();
   }
 
