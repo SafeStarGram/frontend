@@ -8,6 +8,7 @@ import Notifications from "../pages/Notifications/Notifications";
 import Management from "../pages/Management";
 import ProtectedRoute from "./ProtectedRoute";
 import Detail from "../pages/Detail/Detail";
+import AddArea from "../pages/AddArea";
 
 const router = createBrowserRouter([
   {
@@ -62,6 +63,15 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <Detail />
+      </ProtectedRoute>
+    ),
+    children: [],
+  },
+  {
+    path: "/addarea",
+    element: (
+      <ProtectedRoute>
+        <AddArea />
       </ProtectedRoute>
     ),
     children: [],
