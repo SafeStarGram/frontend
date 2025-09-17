@@ -26,6 +26,7 @@ export default function Detail() {
 
   const { profileData, isLoading } = useProfile();
   console.log(data);
+  console.log(profileData);
   return (
     <>
       {isDataLoading || isLoading ? (

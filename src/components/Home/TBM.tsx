@@ -9,12 +9,12 @@ export default function TBM() {
       <h3 className="text-2xl mb-3">오늘의 TBM</h3>
       <div className="flex flex-col gap-3 border-2 border-gray-300 rounded-md p-3">
         {tbms.map((tbm, index) => (
-          <>
-            <div key={index}>{tbm}</div>
+          <div key={index}>
+            <div>{tbm}</div>
             {index !== tbms.length - 1 ? (
-              <hr className="text-gray-300 border-1" />
+              <hr className="text-gray-300 border-1 mt-2" />
             ) : null}
-          </>
+          </div>
         ))}
       </div>
     </div>

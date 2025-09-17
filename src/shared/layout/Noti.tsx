@@ -27,7 +27,10 @@ export default function Noti({
     navigate(`/noti/${postId}`);
   };
   return (
-    <div className="flex border border-gray-300 rounded-md p-5 items-center justify-around gap-5">
+    <div
+      className="flex border border-gray-300 rounded-md p-5 items-center justify-around gap-5 hover:bg-gray-100 hover:cursor-pointer transition"
+      onClick={handleClick}
+    >
       <div className="w-32 h-32 overflow-hidden">
         <img
           src={
@@ -55,10 +58,7 @@ export default function Noti({
           <span className="text-gray-500">{score}점</span>
         </div>
       </div>
-      <div
-        onClick={handleClick}
-        className="flex items-center justify-center bg-gray-200 rounded-full p-1 hover:cursor-pointer hover:bg-brand transition"
-      >
+      <div className="flex items-center justify-center rounded-full p-1 hover:cursor-pointer">
         <GrLinkNext className="w-7 h-7" />
       </div>
     </div>

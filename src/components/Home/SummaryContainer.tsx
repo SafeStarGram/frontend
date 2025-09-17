@@ -19,7 +19,9 @@ export default function SummaryContainer() {
       <div className="grid grid-cols-2 gap-4">
         {isLoading
           ? null
-          : data?.map((area) => <Summary area={area.areaName} />)}
+          : data?.map((area, index) => (
+              <Summary area={area.areaName} key={index} />
+            ))}
       </div>
     </div>
   );
