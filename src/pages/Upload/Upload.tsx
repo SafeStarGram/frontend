@@ -10,7 +10,11 @@ import { CiWarning } from "react-icons/ci";
 import { useState } from "react";
 import { useProfile, type IProfileData } from "../../shared/hooks/useProfile";
 import api from "../../shared/api/axiosInstance";
-import { findDepartment, findPosition } from "../../shared/config/constants";
+import {
+  findDepartment,
+  findPosition,
+  scores,
+} from "../../shared/config/constants";
 import { useNavigate } from "react-router";
 
 interface IForm {
@@ -145,7 +149,6 @@ export default function Upload() {
           <div className="flex items-center border rounded-2xl border-gray-300 p-5 gap-5">
             <FaRegUserCircle className="text-gray-500 w-6 h-6" />
             <div>
-              {/* 유저정보의 이름과 직책 가져오기  */}
               <div className="text-gray-500 text-sm">보고자</div>
               {getUserInfo(profileData)}
             </div>
@@ -159,32 +162,34 @@ export default function Upload() {
           </div>
         </div>
         <div className="mt-5">
-          <h3 className="text-xl font-bold">제목</h3>
+          <h3 className="text-xl font-bold mb-3">제목</h3>
           <input
             className="border border-gray-500 rounded-md w-full p-1 px-2"
             {...register("title")}
           />
         </div>
         <div className="mt-5">
-          <h3 className="text-xl font-bold">내용</h3>
+          <h3 className="text-xl font-bold mb-3">내용</h3>
           <textarea
-            className="border border-gray-500 rounded-md w-full p-1 px-2"
+            className="border border-gray-500 rounded-md w-full p-1 px-2 h-30"
             {...register("description")}
           />
         </div>
         <div className="mt-5">
-          <h3 className="text-xl font-bold">보고자 위험성 평가(1 ~ 5점)</h3>
+          <h3 className="text-xl font-bold mb-3">
+            보고자 위험성 평가(1 ~ 5점)
+          </h3>
           <div className="flex items-center border border-gray-300 rounded-xl p-2 gap-2">
             <CiWarning className="text-brand w-6 h-6" />
             <select
               className="border rounded-xl border-gray-500 p-2 w-full"
               {...register("score")}
             >
-              <option value={5}>5점</option>
-              <option value={4}>4점</option>
-              <option value={3}>3점</option>
-              <option value={2}>2점</option>
-              <option value={1}>1점</option>
+              {scores.map((score) => (
+                <option key={score.value} value={score.value}>
+                  {score.value}점 {score.text}
+                </option>
+              ))}
             </select>
           </div>
         </div>

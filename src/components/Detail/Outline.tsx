@@ -17,6 +17,8 @@ interface OutlineProps {
 }
 
 export default function Outline({ data, profileData }: OutlineProps) {
+  const formattedContent = data.content.replace(/\\n/g, "\n");
+
   return (
     <div className="flex flex-col gap-10 mt-10">
       <div>
@@ -52,7 +54,9 @@ export default function Outline({ data, profileData }: OutlineProps) {
       </div>
       <div>
         <h3 className="text-2xl mb-2">위험성 보고 내용</h3>
-        <div className="border rounded-md p-3 h-50">{data.content}</div>
+        <div className="border rounded-md p-3 whitespace-pre-wrap">
+          {formattedContent}
+        </div>
       </div>
     </div>
   );

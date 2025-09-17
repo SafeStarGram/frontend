@@ -14,21 +14,17 @@ import Evaluation from "../../components/Detail/Evaluation";
 
 export default function Detail() {
   const { postId } = useParams();
-  const getData = async () => {
-    const res = await api.get(`/api/posts/detail/${postId}`);
-    return res.data;
-  };
 
   const { data, isLoading: isDataLoading } = useQuery({
     queryKey: ["detail", { postId }],
-    queryFn: getData,
+    queryFn: async () => (await api.get(`/api/posts/detail/${postId}`)).data,
   });
 
   const { profileData, isLoading } = useProfile();
   console.log(data);
   return (
     <>
-      {isDataLoading || isLoading ? (
+      {isDataLoading || isLoading || !profileData ? (
         <Layout title="로딩 중..." activeTab="notifications">
           <LoadingSpinner />
         </Layout>
@@ -58,7 +54,7 @@ export default function Detail() {
           </div>
           <Outline data={data} profileData={profileData} />
           <Action />
-          <Evaluation score={data.reporterRisk} />
+          <Evaluation score={data.reporterRisk} profileData={profileData} />
           <Comments />
         </Layout>
       )}
