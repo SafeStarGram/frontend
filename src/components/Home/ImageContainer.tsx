@@ -15,9 +15,9 @@ export default function ImageContainer() {
 
   return (
     <>
+      <h3 className="text-2xl mb-3">최근 등록 사진</h3>
       {isLoading ? null : (
         <div>
-          <h3 className="text-2xl">최근 등록 사진</h3>
           {data?.slice(0, 3).map((element) => (
             <Image title={element.title} createdAt={element.createdAt} />
           ))}
