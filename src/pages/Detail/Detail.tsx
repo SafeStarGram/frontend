@@ -26,7 +26,6 @@ export default function Detail() {
 
   const { profileData, isLoading } = useProfile();
   console.log(data);
-  console.log(profileData);
   return (
     <>
       {isDataLoading || isLoading ? (
@@ -66,23 +65,3 @@ export default function Detail() {
     </>
   );
 }
-
-// 데이터 형식
-//  {
-//     "postId": 25,        게시물번호
-//     "subAreaId": 3,      하위구역
-//     "areaId": 2,         상위구역
-//     "reporterId": 1,     작성자
-//     "actionTakerId": null,
-//     "isActionTaken": 0,
-//     "isChecked": 0,
-//     "isActionTakenAt": null
-//     "title": "test",     제목
-//     "content": "test1\r\ntest2\r\ntest3",    내용
-//     "postPhotoUrl": "",    이미지
-//     "reporterRisk": "1",   위험도
-//     "managerRisk": null,   관리자 평가
-//     "createdAt": "2025-09-15T09:59:52",    생성 시간
-//     "updatedAt": null,                     업데이트 시간
-//     "isCheckedAt": "2025-09-15T09:59:52",  체크 시간
-// }
