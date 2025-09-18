@@ -1,4 +1,5 @@
 export const departments = [
+  { value: 0, text: "-" },
   { value: 1, text: "공사" },
   { value: 2, text: "공무" },
   { value: 3, text: "관리" },
@@ -10,6 +11,7 @@ export const departments = [
 ];
 
 export const positions = [
+  { value: 0, text: "-" },
   { value: 1, text: "부장" },
   { value: 2, text: "차장" },
   { value: 3, text: "과장" },

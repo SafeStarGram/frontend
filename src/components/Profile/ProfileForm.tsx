@@ -21,8 +21,8 @@ export default function ProfileForm({ defaultValues, onSubmit }: Props) {
         name: defaultValues.name || "",
         phone: defaultValues.phone || "",
         radio: defaultValues.radio || 0,
-        department: defaultValues.department || "",
-        position: defaultValues.position || "",
+        department: defaultValues.department || "0",
+        position: defaultValues.position || "0",
       });
     }
   }, [defaultValues, reset]);
@@ -56,7 +56,7 @@ export default function ProfileForm({ defaultValues, onSubmit }: Props) {
           <label htmlFor="phone">핸드폰/무전번호</label>
           <div className="flex gap-2">
             <input
-              className="rounded-xl border border-gray-300 p-2 w-2/3"
+              className="rounded-xl border border-gray-300 p-2 w-2/3 placeholder:text-sm"
               placeholder="010-1234-5678 ( - 빼고 입력 해주세요 )"
               {...register("phone")}
             />
@@ -79,7 +79,6 @@ export default function ProfileForm({ defaultValues, onSubmit }: Props) {
               {...register("department")}
               className="rounded-xl border border-gray-300 w-2/3 p-2"
             >
-              <option value="">-</option>
               {departments.map((department) => (
                 <option value={department.value} key={department.value}>
                   {department.text}
@@ -90,7 +89,6 @@ export default function ProfileForm({ defaultValues, onSubmit }: Props) {
               {...register("position")}
               className="rounded-xl border border-gray-300 w-1/3 p-2"
             >
-              <option value="">-</option>
               {positions.map((position) => (
                 <option value={position.value} key={position.value}>
                   {position.text}

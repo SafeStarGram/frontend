@@ -15,7 +15,7 @@ export default function Evaluation({ score, profileData }: IProps) {
     const value = e.target.value;
     console.log(value);
     // try {
-    //   await api.patch("조치사항 업데이트 api");
+    //   await api.patch("위험성 평가 api");
     //   console.log("업데이트 성공:", value);
     // } catch (err) {
     //   console.error("업데이트 실패:", err);

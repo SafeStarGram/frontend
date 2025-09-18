@@ -31,9 +31,9 @@ export default function Detail() {
       ) : (
         <Layout title={data.title} activeTab="notifications">
           <img
-            src="https://plus.unsplash.com/premium_photo-1757322537430-ca9306b803f2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            src={data.postPhotoUrl}
             alt="image"
-            className="h-64 w-full"
+            className="h-64 w-full object-contain"
           />
           <div className="flex w-full gap-3 my-3">
             <Button
@@ -53,7 +53,11 @@ export default function Detail() {
             </Button>
           </div>
           <Outline data={data} profileData={profileData} />
-          <Action />
+          <Action
+            postId={postId}
+            isChecked={data.isChecked}
+            isActionTaken={data.isActionTaken}
+          />
           <Evaluation score={data.reporterRisk} profileData={profileData} />
           <Comments />
         </Layout>
