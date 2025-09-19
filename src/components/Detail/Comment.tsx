@@ -91,7 +91,6 @@ export default function Comment({
           <div className="text-sm text-gray-500">{compareTime(createdAt)}</div>
         </div>
 
-        {/* 댓글 내용 - 수정 모드에 따라 다르게 표시 */}
         {isEditing ? (
           <div className="mt-2">
             <input
@@ -118,27 +117,27 @@ export default function Comment({
             </div>
           </div>
         ) : (
-          <div className="">{message}</div>
-        )}
-
-        {/* 수정/삭제 버튼 - 본인 댓글일 때만 표시 */}
-        {currentUser === userId && (
-          <div className="flex gap-2 mt-1">
-            {!isEditing && (
-              <button
-                onClick={() => setIsEditing(true)}
-                className="text-blue-500 hover:underline text-sm"
-              >
-                수정
-              </button>
+          <div className="flex items-center justify-between">
+            <div className="">{message}</div>
+            {currentUser === userId && (
+              <div className="flex gap-2 mt-1">
+                {!isEditing && (
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="text-blue-500 hover:underline text-sm"
+                  >
+                    수정
+                  </button>
+                )}
+                <button
+                  onClick={handleDelete}
+                  disabled={deleteMutation.isPending}
+                  className="text-red-500 hover:underline text-sm"
+                >
+                  {deleteMutation.isPending ? "삭제 중..." : "삭제"}
+                </button>
+              </div>
             )}
-            <button
-              onClick={handleDelete}
-              disabled={deleteMutation.isPending}
-              className="text-red-500 hover:underline text-sm"
-            >
-              {deleteMutation.isPending ? "삭제 중..." : "삭제"}
-            </button>
           </div>
         )}
       </div>
