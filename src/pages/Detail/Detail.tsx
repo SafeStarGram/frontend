@@ -53,11 +53,7 @@ export default function Detail() {
             </Button>
           </div>
           <Outline data={data} profileData={profileData} />
-          <Action
-            postId={postId}
-            isChecked={data.isChecked}
-            isActionTaken={data.isActionTaken}
-          />
+          <Action postId={postId!} detailInfo={data} />
           <Evaluation score={data.reporterRisk} profileData={profileData} />
           <Comments />
         </Layout>
