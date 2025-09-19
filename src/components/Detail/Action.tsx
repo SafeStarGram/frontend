@@ -3,6 +3,7 @@ import { IoMdCheckboxOutline } from "react-icons/io";
 import api from "../../shared/api/axiosInstance";
 import { findDepartment, findPosition } from "../../shared/config/constants";
 import { changeTimeForm } from "../../shared/hooks/useCurrentTime";
+import { useEffect } from "react";
 
 interface IDetailInfo {
   isChecked: number;
@@ -27,8 +28,16 @@ interface IActionForm {
 }
 
 export default function Action({ postId, detailInfo }: IProps) {
-  const { checkerName, checkerDepartment, checkerPosition, isCheckedAt } =
-    detailInfo;
+  const {
+    checkerName,
+    checkerDepartment,
+    checkerPosition,
+    isCheckedAt,
+    actionTakerName,
+    actionTakerDepartment,
+    actionTakerPosition,
+    isActionTakenAt,
+  } = detailInfo;
   const { register, watch, setValue, getValues } = useForm({
     defaultValues: {
       isChecked: detailInfo.isChecked,
@@ -37,6 +46,12 @@ export default function Action({ postId, detailInfo }: IProps) {
   });
   const isChecked = watch("isChecked");
   const isActionTaken = watch("isActionTaken");
+
+  useEffect(() => {
+    setValue("isChecked", detailInfo.isChecked);
+    setValue("isActionTaken", detailInfo.isActionTaken);
+  }, [detailInfo, setValue]);
+
   const saveToServer = async (data: IActionForm) => {
     try {
       const res = await api.patch(`api/posts/action-status/${postId}`, data);
@@ -58,28 +73,44 @@ export default function Action({ postId, detailInfo }: IProps) {
           <span>확인</span>
           <input type="hidden" {...register("isChecked")} />
           <IoMdCheckboxOutline
-            className={`w-8 h-8 text-blue-500 hover:cursor-pointer ${
+            className={`w-8 h-8 hover:cursor-pointer ${
               isChecked ? "text-blue-500" : "text-gray-400"
             }`}
             onClick={() => handleToggle("isChecked", isChecked)}
           />
-          <div>
+          {isChecked ? (
             <div>
-              {checkerName} ({findDepartment(String(checkerDepartment))}{" "}
-              {findPosition(String(checkerPosition))})
+              <div>
+                {checkerName} ({findDepartment(String(checkerDepartment))}{" "}
+                {findPosition(String(checkerPosition))})
+              </div>
+              <div className="text-sm text-gray-500">
+                {changeTimeForm(isCheckedAt)}
+              </div>
             </div>
-            <div>{changeTimeForm(isCheckedAt)}</div>
-          </div>
+          ) : null}
         </div>
         <div className="flex items-center gap-5">
           <span>조치</span>
           <input type="hidden" {...register("isActionTaken")} />
           <IoMdCheckboxOutline
-            className={`w-8 h-8 text-blue-500 hover:cursor-pointer ${
+            className={`w-8 h-8 hover:cursor-pointer ${
               isActionTaken ? "text-blue-500" : "text-gray-400"
             }`}
             onClick={() => handleToggle("isActionTaken", isActionTaken)}
           />
+          {isActionTaken ? (
+            <div>
+              <div>
+                {actionTakerName} (
+                {findDepartment(String(actionTakerDepartment))}{" "}
+                {findPosition(String(actionTakerPosition))})
+              </div>
+              <div className="text-sm text-gray-500">
+                {changeTimeForm(isActionTakenAt)}
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
     </div>
