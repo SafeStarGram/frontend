@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Button from "../../shared/layout/Button";
 import Layout from "../../shared/layout/Layout";
 import { LuCirclePlus } from "react-icons/lu";
@@ -26,6 +27,15 @@ interface IForm {
   score: number;
 }
 
+interface IUploadData {
+  image?: File;
+  areaId: string;
+  subAreaId: string;
+  title: string;
+  content: string;
+  reporterRisk: string;
+}
+
 const getUserInfo = (data: IProfileData | null) => {
   if (!data) return null;
   const { name, department, position } = data;
@@ -36,27 +46,61 @@ const getUserInfo = (data: IProfileData | null) => {
   );
 };
 
+const uploadPost = async (data: IUploadData) => {
+  const formData = new FormData();
+
+  if (data.image) {
+    formData.append("image", data.image);
+  }
+  formData.append("areaId", data.areaId);
+  formData.append("subAreaId", data.subAreaId);
+  formData.append("title", data.title);
+  formData.append("content", data.content);
+  formData.append("reporterRisk", data.reporterRisk);
+
+  const response = await api.post("api/posts", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
+  return response.data;
+};
+
 export default function Upload() {
-  const { register, handleSubmit, setValue } = useForm<IForm>();
+  const { register, handleSubmit, setValue, reset } = useForm<IForm>();
   const { profileData } = useProfile();
   const navigate = useNavigate();
   const time = useCurrentTime();
+  const queryClient = useQueryClient();
+
+  const uploadMutation = useMutation({
+    mutationFn: uploadPost,
+    onSuccess: (data) => {
+      console.log("업로드 성공:", data);
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      reset();
+      setPreview(null);
+      navigate("/notifications");
+    },
+    onError: (error) => {
+      console.error("업로드 실패:", error);
+      alert("업로드에 실패했습니다. 다시 시도해주세요.");
+    },
+  });
 
   const onSubmit = (data: IForm) => {
-    const formData = new FormData();
+    const uploadData: IUploadData = {
+      areaId: data.upperArea,
+      subAreaId: data.lowerArea,
+      title: data.title,
+      content: data.description,
+      reporterRisk: String(data.score),
+    };
+
     if (data.image) {
-      formData.append("image", data.image); // File 객체
+      uploadData.image = data.image;
     }
-    formData.append("areaId", data.upperArea);
-    formData.append("subAreaId", data.lowerArea);
-    formData.append("title", data.title);
-    formData.append("content", data.description);
-    formData.append("reporterRisk", String(data.score));
-    console.log([...formData]); // 실제 들어간 값 확인 가능
-    api.post("api/posts", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-    navigate("/notifications");
+
+    uploadMutation.mutate(uploadData);
   };
 
   const [preview, setPreview] = useState<string | null>(null);
@@ -72,6 +116,7 @@ export default function Upload() {
     }
     setValue("image", file);
   };
+
   return (
     <Layout
       title="위험 요소 사진 올리기"
@@ -117,15 +162,15 @@ export default function Upload() {
           <div className="flex items-center border rounded-2xl border-gray-300 p-5 gap-5">
             <IoLocationOutline className="text-gray-500 w-6 h-6" />
             <div className="flex flex-col w-1/3">
-              {/* 상위구역 하위구역 정보 가져와서 보여줘야함 */}
               <label htmlFor="upperArea" className="text-gray-500 text-sm">
                 상위구역
               </label>
               <select
                 className="border rounded-xl border-gray-500 p-2"
                 id="upperArea"
-                {...register("upperArea")}
+                {...register("upperArea", { required: true })}
               >
+                <option value="">선택하세요</option>
                 <option value={1}>1블록</option>
                 <option value={2}>2블록</option>
                 <option value={3}>3블록</option>
@@ -138,8 +183,9 @@ export default function Upload() {
               <select
                 className="border rounded-xl border-gray-500 p-2"
                 id="lowerArea"
-                {...register("lowerArea")}
+                {...register("lowerArea", { required: true })}
               >
+                <option value="">선택하세요</option>
                 <option value={1}>101동</option>
                 <option value={2}>102동</option>
                 <option value={3}>103동</option>
@@ -165,14 +211,14 @@ export default function Upload() {
           <h3 className="text-xl font-bold mb-3">제목</h3>
           <input
             className="border border-gray-500 rounded-md w-full p-1 px-2"
-            {...register("title")}
+            {...register("title", { required: true })}
           />
         </div>
         <div className="mt-5">
           <h3 className="text-xl font-bold mb-3">내용</h3>
           <textarea
             className="border border-gray-500 rounded-md w-full p-1 px-2 h-30"
-            {...register("description")}
+            {...register("description", { required: true })}
           />
         </div>
         <div className="mt-5">
@@ -183,7 +229,8 @@ export default function Upload() {
             <CiWarning className="text-brand w-6 h-6" />
             <select
               className="border rounded-xl border-gray-500 p-2 w-full"
-              {...register("score")}
+              {...register("score", { required: true })}
+              disabled={uploadMutation.isPending}
             >
               {scores.map((score) => (
                 <option key={score.value} value={score.value}>
@@ -193,11 +240,22 @@ export default function Upload() {
             </select>
           </div>
         </div>
+
+        {uploadMutation.isError && (
+          <div className="mt-3 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+            업로드 중 오류가 발생했습니다. 다시 시도해주세요.
+          </div>
+        )}
+
         <Button
-          disabled={false}
-          className="bg-brand hover:cursor-pointer hover:bg-orange-300 transition rounded-2xl mt-5 w-full border-none"
+          disabled={uploadMutation.isPending}
+          className={`${
+            uploadMutation.isPending
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-brand hover:cursor-pointer hover:bg-orange-300"
+          } transition rounded-2xl mt-5 w-full border-none`}
         >
-          등록
+          {uploadMutation.isPending ? "업로드 중..." : "등록"}
         </Button>
       </form>
     </Layout>
