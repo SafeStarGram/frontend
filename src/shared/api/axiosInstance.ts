@@ -33,7 +33,7 @@ api.interceptors.response.use(
     ) {
       // access token이 만료되었을 경우
       try {
-        const res = await api.post("auth/refresh", {});
+        const res = await api.post("auth/auto-refresh", {});
         console.log("res: ", res);
         const newAccessToken = res.data.accessToken;
         store.dispatch(setAccessToken(newAccessToken));
