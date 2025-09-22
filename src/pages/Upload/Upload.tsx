@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Button from "../../shared/layout/Button";
 import Layout from "../../shared/layout/Layout";
 import { LuCirclePlus } from "react-icons/lu";
@@ -66,7 +66,7 @@ const uploadPost = async (data: IUploadData) => {
 };
 
 export default function Upload() {
-  const { register, handleSubmit, setValue, reset } = useForm<IForm>();
+  const { register, handleSubmit, setValue, reset, watch } = useForm<IForm>();
   const { profileData } = useProfile();
   const navigate = useNavigate();
   const time = useCurrentTime();
@@ -86,6 +86,12 @@ export default function Upload() {
       alert("업로드에 실패했습니다. 다시 시도해주세요.");
     },
   });
+
+  const { data: areas } = useQuery({
+    queryKey: ["areas"],
+    queryFn: async () => (await api.get("api/areas/read")).data,
+  });
+  console.log(areas);
 
   const onSubmit = (data: IForm) => {
     const uploadData: IUploadData = {
@@ -171,9 +177,11 @@ export default function Upload() {
                 {...register("upperArea", { required: true })}
               >
                 <option value="">선택하세요</option>
-                <option value={1}>1블록</option>
-                <option value={2}>2블록</option>
-                <option value={3}>3블록</option>
+                {areas?.map((area) => (
+                  <option key={area.id} value={area.id}>
+                    {area.areaName}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="flex flex-col w-1/3">
@@ -186,9 +194,13 @@ export default function Upload() {
                 {...register("lowerArea", { required: true })}
               >
                 <option value="">선택하세요</option>
-                <option value={1}>101동</option>
-                <option value={2}>102동</option>
-                <option value={3}>103동</option>
+                {areas
+                  ?.find((area) => String(area.id) === watch("upperArea"))
+                  ?.subAreas.map((subArea) => (
+                    <option key={subArea.subAreaId} value={subArea.subAreaId}>
+                      {subArea.name}
+                    </option>
+                  ))}
               </select>
             </div>
           </div>
