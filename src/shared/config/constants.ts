@@ -25,7 +25,7 @@ export const scores = [
   { value: 4, text: "(수용 가능한 위험성, 3일 내 처리)" },
   { value: 3, text: "(수용 불가한 위험성이나, 긴급하지 않음)" },
   { value: 2, text: "(수용 불가한 위험성,  당일 내 처리)" },
-  { value: 1, text: "(수용 불가한 위험성, 즉시 처리" },
+  { value: 1, text: "(수용 불가한 위험성, 즉시 처리)" },
 ];
 
 export const findDepartment = (department: string | undefined) => {

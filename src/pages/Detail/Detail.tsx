@@ -63,6 +63,7 @@ export default function Detail() {
           <div className="flex w-full gap-3 my-3">
             <Button
               disabled={profileData?.userId !== detailData.reporterId}
+              onClick={() => navigate(`/noti/edit/${postId}`)}
               className="rounded-md w-1/2"
             >
               <LuPencil /> 수정하기
