@@ -6,6 +6,7 @@ interface ButtonProps {
   disabled: boolean;
   baseColor?: string;
   hoverColor?: string;
+  onClick?: () => void;
 }
 
 export default function Button({
@@ -14,6 +15,7 @@ export default function Button({
   className,
   baseColor = "brand",
   hoverColor = "orange-300",
+  onClick,
 }: ButtonProps) {
   const getBaseColorClass = (color: string) => {
     switch (color) {
@@ -38,6 +40,7 @@ export default function Button({
   return (
     <button
       disabled={disabled}
+      onClick={onClick}
       className={`flex items-center justify-center gap-2 text-white p-2 transition ${className} ${getBaseColorClass(
         baseColor
       )} ${

@@ -1,6 +1,6 @@
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import Layout from "../../shared/layout/Layout";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "../../shared/api/axiosInstance";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import Button from "../../shared/layout/Button";
@@ -21,6 +21,32 @@ export default function Detail() {
   });
 
   const { profileData, isLoading } = useProfile();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await api.delete(`api/posts/delete/${id}`);
+      return res.data;
+    },
+    onSuccess: () => {
+      alert("삭제가 완료되었습니다.");
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      navigate(-1);
+    },
+    onError: (error) => {
+      console.error(error);
+      alert("삭제 중 오류가 발생했습니다.");
+    },
+  });
+
+  const handleDelete = () => {
+    const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
+    if (!confirmDelete) return;
+
+    deleteMutation.mutate(postId!);
+  };
+
   return (
     <>
       {isDataLoading || isLoading || !profileData ? (
@@ -43,6 +69,7 @@ export default function Detail() {
             </Button>
             <Button
               disabled={profileData?.userId !== detailData.reporterId}
+              onClick={handleDelete}
               className="rounded-md w-1/2"
               baseColor="red"
               hoverColor="red"
