@@ -36,6 +36,18 @@ interface IUploadData {
   reporterRisk: string;
 }
 
+interface IArea {
+  id: number;
+  areaName: string;
+  imageUrl: string;
+  subAreas: ISubArea[];
+}
+
+interface ISubArea {
+  subAreaId: number;
+  name: string;
+}
+
 const getUserInfo = (data: IProfileData | null) => {
   if (!data) return null;
   const { name, department, position } = data;
@@ -126,34 +138,29 @@ export default function Upload() {
   return (
     <Layout
       title="위험 요소 사진 올리기"
-      showBackButton={true}
+      showBackButton={false}
       activeTab="upload"
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="w-full flex flex-col items-center">
           <label
             htmlFor="imageUpload"
-            className="w-full h-64 flex flex-col justify-center items-center  rounded-xl cursor-pointer bg-gray-200 hover:bg-gray-300 transition mb-3"
+            className="w-full h-64 flex flex-col justify-center items-center rounded-xl cursor-pointer bg-gray-200 hover:bg-gray-300 transition mb-3"
           >
             {preview ? (
               <img
                 src={preview}
                 alt="업로드 미리보기"
-                className="w-full h-full object-cover rounded-xl hover:opacity-80 transition"
+                className="w-full h-full object-contain rounded-xl hover:opacity-80 transition"
               />
             ) : (
               <div className="flex flex-col items-center gap-2 text-gray-500">
                 <LuCirclePlus className="w-24 h-24 text-orange-500" />
+                <p className="text-sm text-gray-600">위험 사진 올리기</p>
               </div>
             )}
           </label>
 
-          <label
-            htmlFor="imageUpload"
-            className="flex items-center justify-center bg-brand p-2 hover:cursor-pointer hover:bg-orange-300 transition rounded-md text-white w-full"
-          >
-            위험 사진 올리기
-          </label>
           <input
             type="file"
             id="imageUpload"
@@ -177,7 +184,7 @@ export default function Upload() {
                 {...register("upperArea", { required: true })}
               >
                 <option value="">선택하세요</option>
-                {areas?.map((area) => (
+                {areas?.map((area: IArea) => (
                   <option key={area.id} value={area.id}>
                     {area.areaName}
                   </option>
@@ -195,8 +202,10 @@ export default function Upload() {
               >
                 <option value="">선택하세요</option>
                 {areas
-                  ?.find((area) => String(area.id) === watch("upperArea"))
-                  ?.subAreas.map((subArea) => (
+                  ?.find(
+                    (area: IArea) => String(area.id) === watch("upperArea")
+                  )
+                  ?.subAreas.map((subArea: ISubArea) => (
                     <option key={subArea.subAreaId} value={subArea.subAreaId}>
                       {subArea.name}
                     </option>

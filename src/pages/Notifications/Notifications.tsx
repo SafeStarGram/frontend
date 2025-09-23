@@ -27,7 +27,11 @@ export default function Notifications() {
   console.log(data);
 
   return (
-    <Layout title="최근 위험 사진 보고" activeTab="notifications">
+    <Layout
+      title="최근 위험 사진 보고"
+      activeTab="notifications"
+      showBackButton={false}
+    >
       <div className="flex flex-col gap-5">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center mt-10">
