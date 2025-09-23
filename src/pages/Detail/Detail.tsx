@@ -11,19 +11,28 @@ import Outline from "../../components/Detail/Outline";
 import Action from "../../components/Detail/Action";
 import Evaluation from "../../components/Detail/Evaluation";
 import CommentContainer from "../../components/Detail/CommentContainer";
+import EditModal from "../../components/Detail/EditModal";
+import { useState } from "react";
 
 export default function Detail() {
   const { postId } = useParams();
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const { data: detailData, isLoading: isDataLoading } = useQuery({
     queryKey: ["detail", { postId }],
     queryFn: async () => (await api.get(`/api/posts/detail/${postId}`)).data,
   });
 
+  const { data: areas } = useQuery({
+    queryKey: ["areas"],
+    queryFn: async () => (await api.get("api/areas/read")).data,
+  });
+
   const { profileData, isLoading } = useProfile();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  // 삭제 mutation
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
       const res = await api.delete(`api/posts/delete/${id}`);
@@ -43,7 +52,6 @@ export default function Detail() {
   const handleDelete = () => {
     const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
     if (!confirmDelete) return;
-
     deleteMutation.mutate(postId!);
   };
 
@@ -63,7 +71,7 @@ export default function Detail() {
           <div className="flex w-full gap-3 my-3">
             <Button
               disabled={profileData?.userId !== detailData.reporterId}
-              onClick={() => navigate(`/noti/edit/${postId}`)}
+              onClick={() => setIsEditModalOpen(true)}
               className="rounded-md w-1/2"
             >
               <LuPencil /> 수정하기
@@ -86,6 +94,14 @@ export default function Detail() {
             profileData={profileData}
           />
           <CommentContainer postId={postId!} />
+
+          <EditModal
+            isOpen={isEditModalOpen}
+            onClose={() => setIsEditModalOpen(false)}
+            postId={postId!}
+            detailData={detailData}
+            areas={areas || []}
+          />
         </Layout>
       )}
     </>

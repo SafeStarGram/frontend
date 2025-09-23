@@ -23,7 +23,7 @@ export default function CommentContainer({ postId }: IProps) {
     queryKey: ["comments", postId],
     queryFn: async () => (await api.get(`api/comment/${postId}`)).data,
   });
-  console.log(comments);
+  //console.log(comments);
   return (
     <div className="my-10">
       <h3 className="text-2xl mb-3">코멘트</h3>
