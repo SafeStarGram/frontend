@@ -3,7 +3,7 @@ import { IoMdCheckboxOutline } from "react-icons/io";
 import api from "../../shared/api/axiosInstance";
 import { findDepartment, findPosition } from "../../shared/config/constants";
 import { changeTimeForm } from "../../shared/hooks/useCurrentTime";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface IDetailInfo {
   isChecked: number;
@@ -28,26 +28,20 @@ interface IActionForm {
 }
 
 export default function Action({ postId, detailInfo }: IProps) {
-  const {
-    checkerName,
-    checkerDepartment,
-    checkerPosition,
-    isCheckedAt,
-    actionTakerName,
-    actionTakerDepartment,
-    actionTakerPosition,
-    isActionTakenAt,
-  } = detailInfo;
-  const { register, watch, setValue, getValues } = useForm({
+  const [currentDetail, setCurrentDetail] = useState<IDetailInfo>(detailInfo);
+
+  const { register, watch, setValue, getValues } = useForm<IActionForm>({
     defaultValues: {
       isChecked: detailInfo.isChecked,
       isActionTaken: detailInfo.isActionTaken,
     },
   });
-  const isChecked = watch("isChecked");
-  const isActionTaken = watch("isActionTaken");
+
+  const isChecked = watch("isChecked") === 1;
+  const isActionTaken = watch("isActionTaken") === 1;
 
   useEffect(() => {
+    setCurrentDetail(detailInfo);
     setValue("isChecked", detailInfo.isChecked);
     setValue("isActionTaken", detailInfo.isActionTaken);
   }, [detailInfo, setValue]);
@@ -55,16 +49,18 @@ export default function Action({ postId, detailInfo }: IProps) {
   const saveToServer = async (data: IActionForm) => {
     try {
       const res = await api.patch(`api/posts/action-status/${postId}`, data);
-      console.log(res.data);
+      setCurrentDetail(res.data);
     } catch (err) {
       console.log(err);
     }
   };
+
   const handleToggle = (field: keyof IActionForm, currentValue: number) => {
     const newValue = currentValue === 1 ? 0 : 1;
-    setValue(field, newValue);
+    setValue(field, newValue, { shouldDirty: true });
     saveToServer(getValues());
   };
+
   return (
     <div className="my-10">
       <h3 className="text-2xl mb-3">조치 유무</h3>
@@ -76,20 +72,24 @@ export default function Action({ postId, detailInfo }: IProps) {
             className={`w-8 h-8 hover:cursor-pointer ${
               isChecked ? "text-blue-500" : "text-gray-400"
             }`}
-            onClick={() => handleToggle("isChecked", isChecked)}
+            onClick={() =>
+              handleToggle("isChecked", watch("isChecked") as number)
+            }
           />
-          {isChecked ? (
+          {isChecked && (
             <div>
               <div>
-                {checkerName} ({findDepartment(String(checkerDepartment))}{" "}
-                {findPosition(String(checkerPosition))})
+                {currentDetail.checkerName} (
+                {findDepartment(String(currentDetail.checkerDepartment))}{" "}
+                {findPosition(String(currentDetail.checkerPosition))})
               </div>
               <div className="text-sm text-gray-500">
-                {changeTimeForm(isCheckedAt)}
+                {changeTimeForm(currentDetail.isCheckedAt)}
               </div>
             </div>
-          ) : null}
+          )}
         </div>
+
         <div className="flex items-center gap-5">
           <span>조치</span>
           <input type="hidden" {...register("isActionTaken")} />
@@ -97,20 +97,22 @@ export default function Action({ postId, detailInfo }: IProps) {
             className={`w-8 h-8 hover:cursor-pointer ${
               isActionTaken ? "text-blue-500" : "text-gray-400"
             }`}
-            onClick={() => handleToggle("isActionTaken", isActionTaken)}
+            onClick={() =>
+              handleToggle("isActionTaken", watch("isActionTaken") as number)
+            }
           />
-          {isActionTaken ? (
+          {isActionTaken && (
             <div>
               <div>
-                {actionTakerName} (
-                {findDepartment(String(actionTakerDepartment))}{" "}
-                {findPosition(String(actionTakerPosition))})
+                {currentDetail.actionTakerName} (
+                {findDepartment(String(currentDetail.actionTakerDepartment))}{" "}
+                {findPosition(String(currentDetail.actionTakerPosition))})
               </div>
               <div className="text-sm text-gray-500">
-                {changeTimeForm(isActionTakenAt)}
+                {changeTimeForm(currentDetail.isActionTakenAt)}
               </div>
             </div>
-          ) : null}
+          )}
         </div>
       </div>
     </div>
