@@ -4,12 +4,13 @@ import AddAreaSection from "./components/AddAreaSection";
 import AreaList from "./components/AreaList";
 import StatsButton from "./components/StatsButton";
 import ManagerList from "./components/ManagerList";
-import { managementAreas } from "./data";
-import { useManagerUsers } from "../../shared/hooks/useManagerUsers";
+import { useManagerUsers } from "../../features/Management/useManagerUsers";
+import { useAreas } from "../../features/Management/useAreas";
 
 export default function Management() {
   const [notificationCount] = useState(9);   // 임시 알림 9 데이터
-  const { users, isLoading, error } = useManagerUsers();
+  const { users, isLoading: usersLoading, error: usersError } = useManagerUsers();
+  const { areas, isLoading: areasLoading, error: areasError } = useAreas();
 
   return (
     <Layout
@@ -20,9 +21,9 @@ export default function Management() {
     >
       <div className="space-y-6">
         <AddAreaSection />
-        <AreaList areas={managementAreas} />
+        <AreaList areas={areas} isLoading={areasLoading} error={areasError} />
         <StatsButton />
-        <ManagerList users={users} isLoading={isLoading} error={error} />
+        <ManagerList users={users} isLoading={usersLoading} error={usersError} />
       </div>
     </Layout>
   );

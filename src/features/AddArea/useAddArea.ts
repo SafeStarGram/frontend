@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import api from "../api/axiosInstance";
+import api from "../../shared/api/axiosInstance";
 import { useNavigate } from "react-router";
 
 interface SubArea {

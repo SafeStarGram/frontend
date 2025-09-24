@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import type { ReactNode } from "react";
-import { useAddArea } from "../../../shared/hooks/useAddArea";
+import { useAddArea } from "../../../features/AddArea/useAddArea";
 
 interface SubArea {
   id: number;
