@@ -3,7 +3,7 @@ import { store } from "../../store/store";
 import { clearAccessToken, setAccessToken } from "../../store/authSlice";
 
 const api = axios.create({
-  baseURL: "https://chan23.duckdns.org/safe_api/",
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
@@ -26,33 +26,34 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 401 && error.message === "TokenExpired") {
-      // access token이 만료되었을 경우
+    const originalRequest = error.config;
+
+    // refresh 요청이면 그냥 바로 실패 처리 (무한루프 방지)
+    if (originalRequest.url.includes("auth/auto-refresh")) {
+      return Promise.reject(error);
+    }
+
+    if (error.response?.status === 401) {
       try {
-        const res = await api.post("auth/refresh", {});
+        // refresh 요청은 별도 axios 인스턴스 사용
+        const res = await axios.post(
+          "https://chan23.duckdns.org/safe_api/auth/auto-refresh",
+          {},
+          { withCredentials: true }
+        );
+
         const newAccessToken = res.data.accessToken;
         store.dispatch(setAccessToken(newAccessToken));
 
         // 실패한 요청 재시도
-        const config = error.config;
-        config.headers["Authorization"] = `Bearer ${newAccessToken}`;
-        return api(config);
+        originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+        return api(originalRequest);
       } catch (e) {
-        // refresh token도 만료된 경우
         store.dispatch(clearAccessToken());
         alert("로그인 세션이 만료되었습니다. 다시 로그인 해주세요.");
         window.location.href = "/login";
         return Promise.reject(e);
       }
-    }
-    if (
-      error.response?.status === 401 &&
-      error.message === "InvalidTokenException"
-    ) {
-      // access token이 없거나 잘못되었을 경우
-      store.dispatch(clearAccessToken());
-      alert("로그인 정보가 올바르지 않습니다.다시 로그인 해주세요.");
-      window.location.href = "/login";
     }
 
     return Promise.reject(error);

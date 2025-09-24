@@ -2,7 +2,7 @@ import { IoHome, IoCamera, IoNotifications, IoPerson } from "react-icons/io5";
 import { Link } from "react-router";
 
 interface FooterProps {
-  activeTab: "home" | "upload" | "notifications" | "profile";
+  activeTab: "home" | "upload" | "notifications" | "profile" | "management";
   notificationCount?: number;
 }
 

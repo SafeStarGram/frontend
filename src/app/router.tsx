@@ -5,7 +5,13 @@ import HomePage from "../pages/HomePage/HomePage";
 import Profile from "../pages/Profile/Profile";
 import Upload from "../pages/Upload/Upload";
 import Notifications from "../pages/Notifications/Notifications";
+import Management from "../pages/Management";
 import ProtectedRoute from "./ProtectedRoute";
+import Detail from "../pages/Detail/Detail";
+import Section from "../pages/Section/Section";
+import AddArea from "../pages/AddArea";
+import Statistics from "../pages/Statistics";
+import AreaDetail from "../pages/AreaDetail";
 
 const router = createBrowserRouter([
   {
@@ -15,10 +21,15 @@ const router = createBrowserRouter([
         <HomePage />
       </ProtectedRoute>
     ),
-    children: [],
   },
-  { path: "/signup", element: <SignUp />, children: [] },
-  { path: "/login", element: <Login />, children: [] },
+  { 
+    path: "/signup", 
+    element: <SignUp /> 
+  },
+  { 
+    path: "/login", 
+    element: <Login /> 
+  },
   {
     path: "/profile",
     element: (
@@ -26,7 +37,6 @@ const router = createBrowserRouter([
         <Profile />
       </ProtectedRoute>
     ),
-    children: [],
   },
   {
     path: "/upload",
@@ -35,7 +45,6 @@ const router = createBrowserRouter([
         <Upload />
       </ProtectedRoute>
     ),
-    children: [],
   },
   {
     path: "/notifications",
@@ -44,7 +53,38 @@ const router = createBrowserRouter([
         <Notifications />
       </ProtectedRoute>
     ),
-    children: [],
+  },
+  {
+    path: "/management",
+    element: <Management />,
+  },
+  {
+    path: "/noti/:postId",
+    element: (
+      <ProtectedRoute>
+        <Detail />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/section/:sectionId",
+    element: (
+      <ProtectedRoute>
+        <Section />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/addarea",
+    element: <AddArea />,
+  },
+  {
+    path: "/stat",
+    element: <Statistics />,
+  },
+  {
+    path: "/areadetail",
+    element: <AreaDetail />,
   },
 ]);
 

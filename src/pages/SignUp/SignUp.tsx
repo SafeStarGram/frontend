@@ -1,9 +1,12 @@
-// import axios from "axios";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import Button from "../../shared/layout/Button";
 import image from "../../assets/safestargram.png";
-import axios from "axios";
+import { useSignUp } from "../../shared/hooks/useSignUp";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { clearAccessToken } from "../../store/authSlice";
+import { clearUserId } from "../../store/userSlice";
 
 interface FormData {
   name: string;
@@ -19,27 +22,14 @@ export default function SignUp() {
     formState: { isValid, errors },
   } = useForm<FormData>({ mode: "onChange" });
 
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const onSubmit = async (data: FormData) => {
-    try {
-      const res = await axios.post(
-        "https://chan23.duckdns.org/safe_api/auth/join",
-        {
-          name: data.name,
-          email: data.email,
-          password: data.password,
-        }
-      );
-      console.log("회원가입 성공", res);
-      navigate("/login");
-    } catch (e) {
-      console.error("회원가입 실패", e);
-      alert("서버 에러가 발생했습니다. 다시 시도해주세요.");
-    }
+  const { mutate: signUp, isPending } = useSignUp();
 
-    console.log(data);
-  };
+  useEffect(() => {
+    dispatch(clearAccessToken());
+    dispatch(clearUserId());
+  }, [dispatch]);
 
   return (
     <div className="flex flex-col items-center justify-center gap-3 min-h-screen bg-gray-50 py-10">
@@ -50,7 +40,7 @@ export default function SignUp() {
       </div>
       <form
         noValidate
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit((data) => signUp(data))}
         className="flex flex-col gap-3 w-full max-w-sm"
       >
         <label htmlFor="name">이름</label>
@@ -109,11 +99,9 @@ export default function SignUp() {
         {errors.checkPassword && (
           <p className="text-red-500">{errors.checkPassword.message}</p>
         )}
-        <Button
-          disabled={!isValid}
-          text="가입하기"
-          className=" rounded-full font-bold mt-5 "
-        />
+        <Button disabled={!isValid} className=" rounded-full font-bold mt-5 ">
+          {isPending ? "가입 중..." : "가입하기"}
+        </Button>
       </form>
       <div className="flex gap-3">
         <div>이미 계정이 있으신가요?</div>
