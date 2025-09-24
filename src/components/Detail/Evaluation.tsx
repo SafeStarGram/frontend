@@ -10,7 +10,7 @@ interface IProps {
 
 export default function Evaluation({ score, profileData }: IProps) {
   const { register } = useForm();
-
+  console.log(profileData.position);
   const handleChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     console.log(value);
@@ -45,7 +45,10 @@ export default function Evaluation({ score, profileData }: IProps) {
               {...register("score")}
               onChange={handleChange}
               disabled={
-                !(profileData.position === "3" || profileData.position === "5")
+                !(
+                  Number(profileData.department) === 4 ||
+                  Number(profileData.department) === 6
+                )
               }
             >
               {scores.map((score) => (
