@@ -70,8 +70,7 @@ export default function Login() {
           <p className="text-red-500">{errors.password.message}</p>
         )}
         <Button disabled={!isValid} className="rounded-full font-bold mt-5">
-          {" "}
-          text={isPending ? "로그인 중..." : "로그인"}
+          {isPending ? "로그인 중..." : "로그인"}
         </Button>
       </form>
       <div className="flex gap-3">

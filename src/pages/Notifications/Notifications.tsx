@@ -1,10 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import Layout from "../../shared/layout/Layout";
 import Noti from "../../shared/layout/Noti";
 import api from "../../shared/api/axiosInstance";
-import LoadingSpinner from "../../components/LoadingSpinner";
+import { SyncLoader } from "react-spinners";
+import { changeTimeForm } from "../../shared/hooks/useCurrentTime";
+import { useEffect, useRef } from "react";
 
-interface INotification {
+export interface INotification {
   title: string;
   areaId: string;
   subAreaId: string;
@@ -14,52 +16,102 @@ interface INotification {
   postId: string;
 }
 
-export default function Notifications() {
-  const getData = async () => {
-    const res = await api.get("/api/posts", { params: { page: 0, size: 10 } });
-    return res.data;
-  };
-  const { data, isLoading } = useQuery<INotification[]>({
-    queryKey: ["notification"],
-    queryFn: getData,
+const fetchNotifications = async ({ pageParam }: { pageParam?: number }) => {
+  const res = await api.get("/api/posts", {
+    params: { page: pageParam ?? 0, size: 5 },
   });
-  console.log(data);
+  return res.data;
+};
 
-  const changeTime = (time: string) => {
-    const date = new Date(time);
+export default function Notifications() {
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery<INotification[]>({
+    queryKey: ["notifications"],
+    queryFn: ({ pageParam = 0 }) =>
+      fetchNotifications({ pageParam: pageParam as number }),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length === 5) {
+        return allPages.length; // 0 → 1 → 2 …
+      }
+      return null;
+    },
+  });
 
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
+  // 스크롤이 끝에 도달하면 fetchNextPage를 호출
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
-    let hours = date.getHours();
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    const ampm = hours >= 12 ? "PM" : "AM";
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      {
+        rootMargin: "100px",
+      }
+    );
 
-    hours = hours % 12;
-    hours = hours ? hours : 12;
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
 
-    return `${year}-${month}-${day} ${hours}:${minutes} ${ampm}`;
-  };
+    return () => {
+      if (loadMoreRef.current) {
+        observer.unobserve(loadMoreRef.current);
+      }
+    };
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
-    <Layout title="최근 위험 사진 보고" activeTab="notifications">
+    <Layout
+      title="최근 위험 사진 보고"
+      activeTab="notifications"
+      showBackButton={false}
+    >
       <div className="flex flex-col gap-5">
         {isLoading ? (
-          <LoadingSpinner />
+          <div className="flex flex-col items-center justify-center mt-10">
+            <SyncLoader color="#ff7f4c" />
+            <span className="text-brand mt-10">
+              데이터를 불러오는 중입니다 ...
+            </span>
+          </div>
+        ) : isError ? (
+          <div>데이터를 불러오는 중 오류가 발생했습니다.</div>
         ) : (
-          data?.map((noti) => (
-            <Noti
-              key={noti.postId}
-              postId={noti.postId}
-              title={noti.title}
-              upperArea={noti.areaId}
-              lowerArea={noti.subAreaId}
-              uploadTime={changeTime(noti.createdAt)}
-              score={Number(noti.reporterRisk)}
-              photoUrl={noti.postPhotoUrl}
-            />
+          data?.pages.map((page, index) => (
+            <div key={index} className="flex flex-col gap-3">
+              {page.map((noti) => (
+                <Noti
+                  key={noti.postId}
+                  postId={noti.postId}
+                  title={noti.title}
+                  upperArea={noti.areaId}
+                  lowerArea={noti.subAreaId}
+                  uploadTime={changeTimeForm(noti.createdAt)}
+                  score={Number(noti.reporterRisk)}
+                  photoUrl={noti.postPhotoUrl}
+                />
+              ))}
+            </div>
           ))
+        )}
+        {isFetchingNextPage && (
+          <div className="flex justify-center py-4">
+            <SyncLoader color="#ff7f4c" />
+            <span className="text-brand">더 많은 데이터를 불러오는 중...</span>
+          </div>
+        )}
+        {hasNextPage && !isFetchingNextPage && (
+          <div ref={loadMoreRef} className="h-1" />
         )}
       </div>
     </Layout>

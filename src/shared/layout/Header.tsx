@@ -22,7 +22,7 @@ export default function Header({
               onClick={() => {
                 navigate(-1);
               }}
-              className="mr-3 p-1 rounded-full hover:bg-gray-100 transition-colors"
+              className="mr-3 p-1 rounded-full hover:bg-gray-100 transition-colors hover:cursor-pointer"
               aria-label="뒤로 가기"
             >
               <IoArrowBack className="w-6 h-6 text-gray-700" />

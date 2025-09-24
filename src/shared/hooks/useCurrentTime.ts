@@ -15,6 +15,26 @@ export const changeTimeForm = (time?: string) => {
   return `${year}.${month}.${day}, ${hours}:${minutes} ${ampm}`;
 };
 
+export const compareTime = (createdAt: string) => {
+  const created = new Date(createdAt.replace(/-/g, "/"));
+  const now = new Date();
+  const diffMs = now.getTime() - created.getTime();
+
+  const diffMinutes = Math.floor(diffMs / (1000 * 60));
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffMinutes < 1) {
+    return "방금전";
+  } else if (diffMinutes < 60) {
+    return `${diffMinutes} 분전`;
+  } else if (diffHours < 24) {
+    return `${diffHours} 시간전`;
+  } else {
+    return `${diffDays} 일전`;
+  }
+};
+
 export function useCurrentTime() {
   const [time, setTime] = useState("");
 

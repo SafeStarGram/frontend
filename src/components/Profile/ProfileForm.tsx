@@ -21,15 +21,15 @@ export default function ProfileForm({ defaultValues, onSubmit }: Props) {
         name: defaultValues.name || "",
         phone: defaultValues.phone || "",
         radio: defaultValues.radio || 0,
-        department: defaultValues.department || "1",
-        position: defaultValues.position || "1",
+        department: defaultValues.department || "0",
+        position: defaultValues.position || "0",
       });
     }
   }, [defaultValues, reset]);
 
   const defaultImageUrl =
     typeof defaultValues?.image === "string" ? defaultValues.image : null;
-
+  console.log(defaultValues);
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <ProfileImageUpload
@@ -56,15 +56,18 @@ export default function ProfileForm({ defaultValues, onSubmit }: Props) {
           <label htmlFor="phone">핸드폰/무전번호</label>
           <div className="flex gap-2">
             <input
-              className="rounded-xl border border-gray-300 p-2 w-2/3"
-              placeholder="01012345678"
+              className="rounded-xl border border-gray-300 p-2 w-2/3 placeholder:text-sm"
+              placeholder="010-1234-5678 ( - 빼고 입력 해주세요 )"
               {...register("phone")}
             />
-            <input
-              className="rounded-xl border border-gray-300 p-2 w-1/3"
-              placeholder="1"
-              {...register("radio")}
-            />
+            <div className="flex items-center border border-gray-300 rounded-xl w-1/3">
+              <span className="px-2 text-gray-500">#</span>
+              <input
+                className="flex-1 p-2 outline-none"
+                placeholder="0"
+                {...register("radio")}
+              />
+            </div>
           </div>
           <hr className="text-gray-300 mb-5 mt-2" />
         </div>

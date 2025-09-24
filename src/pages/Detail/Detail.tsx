@@ -1,6 +1,6 @@
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import Layout from "../../shared/layout/Layout";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "../../shared/api/axiosInstance";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import Button from "../../shared/layout/Button";
@@ -8,46 +8,77 @@ import { LuPencil } from "react-icons/lu";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { useProfile } from "../../shared/hooks/useProfile";
 import Outline from "../../components/Detail/Outline";
-import Comment from "../../components/Detail/Comment";
 import Action from "../../components/Detail/Action";
 import Evaluation from "../../components/Detail/Evaluation";
+import CommentContainer from "../../components/Detail/CommentContainer";
+import EditModal from "../../components/Detail/EditModal";
+import { useState } from "react";
 
 export default function Detail() {
   const { postId } = useParams();
-  const getData = async () => {
-    const res = await api.get(`/api/posts/detail/${postId}`);
-    return res.data;
-  };
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const { data, isLoading: isDataLoading } = useQuery({
+  const { data: detailData, isLoading: isDataLoading } = useQuery({
     queryKey: ["detail", { postId }],
-    queryFn: getData,
+    queryFn: async () => (await api.get(`/api/posts/detail/${postId}`)).data,
+  });
+
+  const { data: areas } = useQuery({
+    queryKey: ["areas"],
+    queryFn: async () => (await api.get("api/areas/read")).data,
   });
 
   const { profileData, isLoading } = useProfile();
-  console.log(data);
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  // 삭제 mutation
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await api.delete(`api/posts/delete/${id}`);
+      return res.data;
+    },
+    onSuccess: () => {
+      alert("삭제가 완료되었습니다.");
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      navigate(-1);
+    },
+    onError: (error) => {
+      console.error(error);
+      alert("삭제 중 오류가 발생했습니다.");
+    },
+  });
+
+  const handleDelete = () => {
+    const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
+    if (!confirmDelete) return;
+    deleteMutation.mutate(postId!);
+  };
+
   return (
     <>
-      {isDataLoading || isLoading ? (
+      {isDataLoading || isLoading || !profileData ? (
         <Layout title="로딩 중..." activeTab="notifications">
           <LoadingSpinner />
         </Layout>
       ) : (
-        <Layout title={data.title} activeTab="notifications">
+        <Layout title={detailData.title} activeTab="notifications">
           <img
-            src="https://plus.unsplash.com/premium_photo-1757322537430-ca9306b803f2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            src={detailData.postPhotoUrl}
             alt="image"
-            className="h-64 w-full"
+            className="h-64 w-full object-contain"
           />
           <div className="flex w-full gap-3 my-3">
             <Button
-              disabled={profileData?.userId !== data.reporterId}
+              disabled={profileData?.userId !== detailData.reporterId}
+              onClick={() => setIsEditModalOpen(true)}
               className="rounded-md w-1/2"
             >
               <LuPencil /> 수정하기
             </Button>
             <Button
-              disabled={profileData?.userId !== data.reporterId}
+              disabled={profileData?.userId !== detailData.reporterId}
+              onClick={handleDelete}
               className="rounded-md w-1/2"
               baseColor="red"
               hoverColor="red"
@@ -56,10 +87,21 @@ export default function Detail() {
               삭제하기
             </Button>
           </div>
-          <Outline data={data} profileData={profileData} />
-          <Action />
-          <Evaluation score={data.reporterRisk} />
-          <Comment />
+          <Outline data={detailData} profileData={profileData} />
+          <Action postId={postId!} detailInfo={detailData} />
+          <Evaluation
+            score={detailData.reporterRisk}
+            profileData={profileData}
+          />
+          <CommentContainer postId={postId!} />
+
+          <EditModal
+            isOpen={isEditModalOpen}
+            onClose={() => setIsEditModalOpen(false)}
+            postId={postId!}
+            detailData={detailData}
+            areas={areas || []}
+          />
         </Layout>
       )}
     </>
