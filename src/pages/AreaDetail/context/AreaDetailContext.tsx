@@ -108,14 +108,63 @@ export function AreaDetailProvider({ children }: AreaDetailProviderProps) {
 
   const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
+    console.log('파일 선택됨:', file); // 디버깅용
+    
     if (file) {
+      // 파일 타입 확인
+      if (!file.type.startsWith('image/')) {
+        alert('이미지 파일만 선택할 수 있습니다.');
+        return;
+      }
+      
+      // 파일 크기 확인 (10MB 제한)
+      if (file.size > 10 * 1024 * 1024) {
+        alert('파일 크기는 10MB 이하여야 합니다.');
+        return;
+      }
+      
       setSelectedImage(file);
+      
       const reader = new FileReader();
       reader.onload = (e) => {
-        setImagePreview(e.target?.result as string);
+        const result = e.target?.result;
+        if (result && typeof result === 'string') {
+          console.log('이미지 미리보기 생성됨 - 데이터 길이:', result.length); // 디버깅용
+          console.log('이미지 데이터 타입:', result.substring(0, 30)); // 디버깅용
+          setImagePreview(result);
+        } else {
+          console.error('FileReader 결과가 올바르지 않음:', result);
+          alert('이미지 파일을 읽을 수 없습니다.');
+        }
       };
-      reader.readAsDataURL(file);
+      
+      reader.onerror = (e) => {
+        console.error('파일 읽기 오류:', e);
+        alert('파일을 읽는 중 오류가 발생했습니다.');
+      };
+      
+      reader.onloadstart = () => {
+        console.log('파일 읽기 시작'); // 디버깅용
+      };
+      
+      reader.onprogress = (e) => {
+        if (e.lengthComputable) {
+          console.log('파일 읽기 진행:', Math.round((e.loaded / e.total) * 100) + '%'); // 디버깅용
+        }
+      };
+      
+      try {
+        reader.readAsDataURL(file);
+      } catch (error) {
+        console.error('FileReader 실행 오류:', error);
+        alert('파일 읽기를 시작할 수 없습니다.');
+      }
+    } else {
+      console.log('파일이 선택되지 않음'); // 디버깅용
     }
+    
+    // input 값 초기화 (같은 파일을 다시 선택할 수 있도록)
+    event.target.value = '';
   };
 
   const handleSave = () => {
