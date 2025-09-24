@@ -13,15 +13,22 @@ export default function Header({
   showBackButton = true,
 }: HeaderProps) {
   const navigate = useNavigate();
+  
+  const handleBackClick = () => {
+    if (onBack) {
+      onBack();
+    } else {
+      navigate(-1);
+    }
+  };
+
   return (
     <header className="sticky top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 px-4 py-3 h-20">
       <div className="flex items-center justify-between h-full">
         <div className="w-10">
           {showBackButton && (
             <button
-              onClick={() => {
-                navigate(-1);
-              }}
+              onClick={handleBackClick}
               className="mr-3 p-1 rounded-full hover:bg-gray-100 transition-colors"
               aria-label="뒤로 가기"
             >

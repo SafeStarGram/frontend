@@ -20,10 +20,15 @@ const router = createBrowserRouter([
         <HomePage />
       </ProtectedRoute>
     ),
-    children: [],
   },
-  { path: "/signup", element: <SignUp />, children: [] },
-  { path: "/login", element: <Login />, children: [] },
+  { 
+    path: "/signup", 
+    element: <SignUp /> 
+  },
+  { 
+    path: "/login", 
+    element: <Login /> 
+  },
   {
     path: "/profile",
     element: (
@@ -31,7 +36,6 @@ const router = createBrowserRouter([
         <Profile />
       </ProtectedRoute>
     ),
-    children: [],
   },
   {
     path: "/upload",
@@ -40,7 +44,6 @@ const router = createBrowserRouter([
         <Upload />
       </ProtectedRoute>
     ),
-    children: [],
   },
   {
     path: "/notifications",
@@ -49,12 +52,10 @@ const router = createBrowserRouter([
         <Notifications />
       </ProtectedRoute>
     ),
-    children: [],
   },
   {
     path: "/management",
     element: <Management />,
-    children: [],
   },
   {
     path: "/noti/:postId",
@@ -63,22 +64,18 @@ const router = createBrowserRouter([
         <Detail />
       </ProtectedRoute>
     ),
-    children: [],
   },
   {
     path: "/addarea",
     element: <AddArea />,
-    children: [],
   },
   {
     path: "/stat",
     element: <Statistics />,
-    children: [],
   },
   {
     path: "/areadetail",
     element: <AreaDetail />,
-    children: [],
   },
 ]);
 
