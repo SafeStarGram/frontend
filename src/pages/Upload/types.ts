@@ -16,6 +16,7 @@ export interface IUploadData {
   reporterRisk: string;
 }
 
+// 미조치 건수, 위험요소 신고 건수 필요.
 export interface IArea {
   id: number;
   areaName: string;

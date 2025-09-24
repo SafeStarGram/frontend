@@ -1,30 +1,15 @@
 import Comment from "./Comment";
-import api from "../../shared/api/axiosInstance";
-import { useQuery } from "@tanstack/react-query";
 import AddComment from "./AddComment";
+import type { IComment } from "../types";
+import { useComments } from "../../../shared/hooks/useComments";
 
 interface IProps {
   postId: string;
 }
 
-interface IComment {
-  userId: number;
-  commentId: number;
-  userName: string;
-  positionId: number;
-  departmentId: number;
-  message: string;
-  createdAt: string;
-  postId: string;
-  profilePhotoUrl: string;
-}
-
 export default function CommentContainer({ postId }: IProps) {
-  const { data: comments, isLoading } = useQuery({
-    queryKey: ["comments", postId],
-    queryFn: async () => (await api.get(`api/comment/${postId}`)).data,
-  });
-  //console.log(comments);
+  const { comments, isLoading } = useComments(postId);
+
   return (
     <div className="my-10">
       <h3 className="text-2xl mb-3">코멘트</h3>

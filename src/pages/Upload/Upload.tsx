@@ -4,18 +4,20 @@ import Button from "../../shared/layout/Button";
 import Layout from "../../shared/layout/Layout";
 import { useCurrentTime } from "../../shared/hooks/useCurrentTime";
 import { useProfile } from "../../shared/hooks/useProfile";
-import { useUpload } from "../../shared/hooks/useUpload";
-import type { IForm, IUploadData } from "../../shared/types/upload";
-import { ImageUploader } from "../../components/Upload/ImageUploader";
-import { LocationSelector } from "../../components/Upload/LocationSelector";
-import { ReportInfo } from "../../components/Upload/ReportInfo";
-import { FormFields } from "../../components/Upload/FormFields";
+import type { IForm, IUploadData } from "./types";
+import { ImageUploader } from "./components/ImageUploader";
+import { LocationSelector } from "./components/LocationSelector";
+import { ReportInfo } from "./components/ReportInfo";
+import { FormFields } from "./components/FormFields";
+import { useArea } from "../../shared/hooks/useArea";
+import { usePost } from "../../shared/hooks/usePost";
 
 export default function Upload() {
   const { register, handleSubmit, setValue, reset, watch } = useForm<IForm>();
   const { profileData } = useProfile();
   const time = useCurrentTime();
-  const { uploadMutation, areas } = useUpload();
+  const { uploadMutation } = usePost();
+  const { areas } = useArea();
   const [preview, setPreview] = useState<string | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

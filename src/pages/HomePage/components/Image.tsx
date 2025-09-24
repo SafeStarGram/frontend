@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
-import { changeTimeForm } from "../../shared/hooks/useCurrentTime";
 import { FaAngleRight } from "react-icons/fa";
+import { changeTimeForm } from "../../../shared/hooks/useCurrentTime";
 
 interface IProps {
   title: string;

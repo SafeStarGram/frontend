@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
-import api from "../../shared/api/axiosInstance";
-import type { IUploadData } from "../types/upload";
+import api from "../api/axiosInstance";
+import type { IUploadData } from "../../pages/Upload/types";
+import type { INotification } from "../../pages/Notifications/types";
 
 const uploadPost = async (data: IUploadData) => {
   const formData = new FormData();
@@ -22,15 +23,20 @@ const uploadPost = async (data: IUploadData) => {
   return response.data;
 };
 
-export const useUpload = () => {
+export const usePost = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
+  const { data: posts, isLoading } = useQuery<INotification[]>({
+    queryKey: ["posts"],
+    queryFn: async () => (await api.get("posts")).data,
+  });
 
   const uploadMutation = useMutation({
     mutationFn: uploadPost,
     onSuccess: (data) => {
       console.log("업로드 성공:", data);
-      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
       navigate("/notifications");
     },
     onError: (error) => {
@@ -39,10 +45,5 @@ export const useUpload = () => {
     },
   });
 
-  const { data: areas } = useQuery({
-    queryKey: ["areas"],
-    queryFn: async () => (await api.get("api/areas/read")).data,
-  });
-
-  return { uploadMutation, areas };
+  return { posts, isLoading, uploadMutation };
 };

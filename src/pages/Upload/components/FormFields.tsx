@@ -1,7 +1,7 @@
 import type { UseFormRegister } from "react-hook-form";
 import { CiWarning } from "react-icons/ci";
-import { scores } from "../../shared/config/constants";
-import type { IForm } from "../../shared/types/upload";
+import type { IForm } from "../types";
+import { scores } from "../../../shared/config/constants";
 
 interface FormFieldsProps {
   register: UseFormRegister<IForm>;

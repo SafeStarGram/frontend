@@ -1,8 +1,8 @@
 import { useState } from "react";
 import Layout from "../../shared/layout/Layout";
-import ImageContainer from "../../components/Home/ImageContainer";
-import TBM from "../../components/Home/TBM";
-import SummaryContainer from "../../components/Home/SummaryContainer";
+import TBM from "./components/TBM";
+import SummaryContainer from "./components/SummaryContainer";
+import ImageContainer from "./components/ImageContainer";
 
 export default function HomePage() {
   const [notificationCount] = useState(9);

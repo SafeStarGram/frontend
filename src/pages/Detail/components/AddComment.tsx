@@ -1,7 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { LuSend } from "react-icons/lu";
-import api from "../../shared/api/axiosInstance";
+import { useAddComment } from "../../../shared/hooks/useComments";
 
 interface IProps {
   postId: string;
@@ -13,20 +12,14 @@ interface CommentForm {
 
 export default function AddComment({ postId }: IProps) {
   const { register, handleSubmit, reset } = useForm<CommentForm>();
-  const queryClient = useQueryClient();
-  const mutation = useMutation({
-    mutationFn: async (comment: { postId: number; message: string }) =>
-      await api.post(`api/comment`, comment),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["comments", postId] });
-      reset();
-    },
-  });
-  const onSubmit = (data: { message: string }) => {
-    // 댓글 작성 api 연동
-    const newComment = { ...data, postId: Number(postId) };
-    mutation.mutate(newComment);
+  const addComment = useAddComment(postId);
+
+  const onSubmit = (data: CommentForm) => {
+    addComment.mutate(data.message, {
+      onSuccess: () => reset(),
+    });
   };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex items-center gap-3">
       <input

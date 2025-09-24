@@ -1,53 +1,31 @@
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 import Layout from "../../shared/layout/Layout";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import api from "../../shared/api/axiosInstance";
-import LoadingSpinner from "../../components/LoadingSpinner";
+import LoadingSpinner from "../../shared/layout/LoadingSpinner";
 import Button from "../../shared/layout/Button";
 import { LuPencil } from "react-icons/lu";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { useProfile } from "../../shared/hooks/useProfile";
-import Outline from "../../components/Detail/Outline";
-import Action from "../../components/Detail/Action";
-import Evaluation from "../../components/Detail/Evaluation";
-import CommentContainer from "../../components/Detail/CommentContainer";
-import EditModal from "../../components/Detail/EditModal";
 import { useState } from "react";
+import Outline from "./components/Outline";
+import Action from "./components/Action";
+import Evaluation from "./components/Evaluation";
+import CommentContainer from "./components/CommentContainer";
+import EditModal from "./components/EditModal";
+import { useArea } from "../../shared/hooks/useArea";
+import { useDetail } from "../../shared/hooks/useDetail";
 
 export default function Detail() {
   const { postId } = useParams();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const { data: detailData, isLoading: isDataLoading } = useQuery({
-    queryKey: ["detail", { postId }],
-    queryFn: async () => (await api.get(`/api/posts/detail/${postId}`)).data,
-  });
+  const {
+    detailData,
+    isLoading: isDataLoading,
+    deleteMutation,
+  } = useDetail(postId!);
 
-  const { data: areas } = useQuery({
-    queryKey: ["areas"],
-    queryFn: async () => (await api.get("api/areas/read")).data,
-  });
-
+  const { areas } = useArea();
   const { profileData, isLoading } = useProfile();
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-
-  // 삭제 mutation
-  const deleteMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const res = await api.delete(`api/posts/delete/${id}`);
-      return res.data;
-    },
-    onSuccess: () => {
-      alert("삭제가 완료되었습니다.");
-      queryClient.invalidateQueries({ queryKey: ["notifications"] });
-      navigate(-1);
-    },
-    onError: (error) => {
-      console.error(error);
-      alert("삭제 중 오류가 발생했습니다.");
-    },
-  });
 
   const handleDelete = () => {
     const confirmDelete = window.confirm("정말 삭제하시겠습니까?");

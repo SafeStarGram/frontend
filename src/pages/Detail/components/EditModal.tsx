@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-import api from "../../shared/api/axiosInstance";
-import { scores } from "../../shared/config/constants";
+import type { Area } from "../types";
+import { useEditPost } from "../../../shared/hooks/useEditPost";
+import { scores } from "../../../shared/config/constants";
 
 interface IForm {
   title: string;
@@ -10,18 +10,6 @@ interface IForm {
   subAreaId: number;
   content: string;
   reporterRisk: string;
-}
-
-interface Area {
-  id: number;
-  areaName: string;
-  imageUrl: string | null;
-  subAreas: SubArea[];
-}
-
-interface SubArea {
-  subAreaId: number;
-  name: string;
 }
 
 interface EditModalProps {
@@ -39,8 +27,6 @@ export default function EditModal({
   detailData,
   areas,
 }: EditModalProps) {
-  const queryClient = useQueryClient();
-
   const { register, handleSubmit, reset, watch } = useForm<IForm>({
     defaultValues: {
       title: detailData?.title ?? "",
@@ -59,21 +45,7 @@ export default function EditModal({
   const subAreas = selectedArea?.subAreas || [];
 
   // 수정 mutation
-  const editMutation = useMutation({
-    mutationFn: async (data: IForm) => {
-      console.log("보내는 데이터:", data);
-      const res = await api.patch(`api/posts/${postId}`, data);
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["detail", { postId }] });
-      onClose();
-    },
-    onError: (error) => {
-      console.error(error);
-      alert("수정 중 오류가 발생했습니다.");
-    },
-  });
+  const editMutation = useEditPost(postId, onClose);
 
   const onSubmit = (data: IForm) => {
     editMutation.mutate(data);

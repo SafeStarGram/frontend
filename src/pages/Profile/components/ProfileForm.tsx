@@ -1,9 +1,9 @@
 import { useForm } from "react-hook-form";
 import ProfileImageUpload from "./ProfileImageUpload";
-import Button from "../../shared/layout/Button";
-import type { IProfileData } from "../../shared/hooks/useProfile";
 import { useEffect } from "react";
-import { departments, positions } from "../../shared/config/constants";
+import type { IProfileData } from "../types";
+import { departments, positions } from "../../../shared/config/constants";
+import Button from "../../../shared/layout/Button";
 
 interface Props {
   defaultValues?: IProfileData;
@@ -29,7 +29,7 @@ export default function ProfileForm({ defaultValues, onSubmit }: Props) {
 
   const defaultImageUrl =
     typeof defaultValues?.image === "string" ? defaultValues.image : null;
-  console.log(defaultValues);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <ProfileImageUpload

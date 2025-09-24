@@ -1,30 +1,14 @@
 import { useForm } from "react-hook-form";
 import { IoMdCheckboxOutline } from "react-icons/io";
-import api from "../../shared/api/axiosInstance";
-import { findDepartment, findPosition } from "../../shared/config/constants";
-import { changeTimeForm } from "../../shared/hooks/useCurrentTime";
 import { useEffect, useState } from "react";
+import type { IActionForm, IDetailInfo } from "../types";
+import { findDepartment, findPosition } from "../../../shared/config/constants";
+import { changeTimeForm } from "../../../shared/hooks/useCurrentTime";
+import { useAction } from "../../../shared/hooks/useAction";
 
-interface IDetailInfo {
-  isChecked: number;
-  checkerName: string;
-  checkerPosition: number;
-  checkerDepartment: number;
-  isCheckedAt: string;
-  isActionTaken: number;
-  actionTakerName: string;
-  actionTakerPosition: number;
-  actionTakerDepartment: number;
-  isActionTakenAt: string;
-}
 interface IProps {
   postId: string;
   detailInfo: IDetailInfo;
-}
-
-interface IActionForm {
-  isChecked: number;
-  isActionTaken: number;
 }
 
 export default function Action({ postId, detailInfo }: IProps) {
@@ -46,19 +30,19 @@ export default function Action({ postId, detailInfo }: IProps) {
     setValue("isActionTaken", detailInfo.isActionTaken);
   }, [detailInfo, setValue]);
 
-  const saveToServer = async (data: IActionForm) => {
-    try {
-      const res = await api.patch(`api/posts/action-status/${postId}`, data);
-      setCurrentDetail(res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const actionMutation = useAction(postId);
 
   const handleToggle = (field: keyof IActionForm, currentValue: number) => {
     const newValue = currentValue === 1 ? 0 : 1;
     setValue(field, newValue, { shouldDirty: true });
-    saveToServer(getValues());
+    actionMutation.mutate(getValues(), {
+      onSuccess: (data) => {
+        setCurrentDetail(data);
+      },
+      onError: (err) => {
+        console.error(err);
+      },
+    });
   };
 
   return (

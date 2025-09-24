@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from "react-router";
 import { useAreaDetail } from "../../../features/AreaDetail/useAreaDetail";
 import { useUpdateArea } from "../../../features/AreaDetail/useUpdateArea";
 import type { SubArea } from "../../Management/types";
-import LoadingSpinner from "../../../components/LoadingSpinner";
+import LoadingSpinner from "../../../shared/layout/LoadingSpinner";
 
 interface AreaDetailContextType {
   // 상태
@@ -18,7 +18,7 @@ interface AreaDetailContextType {
   isLoading: boolean;
   error: any;
   isSaving: boolean;
-  
+
   // 액션들
   setAreaName: (name: string) => void;
   addSubArea: () => void;
@@ -29,7 +29,9 @@ interface AreaDetailContextType {
   handleSave: () => void;
 }
 
-const AreaDetailContext = createContext<AreaDetailContextType | undefined>(undefined);
+const AreaDetailContext = createContext<AreaDetailContextType | undefined>(
+  undefined
+);
 
 interface AreaDetailProviderProps {
   children: ReactNode;
@@ -38,16 +40,22 @@ interface AreaDetailProviderProps {
 export function AreaDetailProvider({ children }: AreaDetailProviderProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   // Management 페이지에서 전달받은 areaId 추출
   const areaId = location.state?.areaId || null;
-  
+
   // API 데이터 가져오기
   const { area, isLoading, error } = useAreaDetail(areaId);
-  
+
   // 구역 정보 업데이트 API
-  const { updateArea, isUpdating, error: updateError, isSuccess, reset } = useUpdateArea();
-  
+  const {
+    updateArea,
+    isUpdating,
+    error: updateError,
+    isSuccess,
+    reset,
+  } = useUpdateArea();
+
   // 상태들
   const [areaName, setAreaNameState] = useState("");
   const [subAreas, setSubAreas] = useState<SubArea[]>([]);
@@ -79,7 +87,11 @@ export function AreaDetailProvider({ children }: AreaDetailProviderProps) {
   // 업데이트 에러 처리
   useEffect(() => {
     if (updateError) {
-      alert(`저장 중 오류가 발생했습니다: ${updateError.message || "알 수 없는 오류"}`);
+      alert(
+        `저장 중 오류가 발생했습니다: ${
+          updateError.message || "알 수 없는 오류"
+        }`
+      );
       reset(); // 에러 상태 초기화
     }
   }, [updateError, reset]);
@@ -101,9 +113,11 @@ export function AreaDetailProvider({ children }: AreaDetailProviderProps) {
   };
 
   const handleSubAreaChange = (subAreaId: number, name: string) => {
-    setSubAreas(subAreas.map(area => 
-      area.subAreaId === subAreaId ? { ...area, name } : area
-    ));
+    setSubAreas(
+      subAreas.map((area) =>
+        area.subAreaId === subAreaId ? { ...area, name } : area
+      )
+    );
   };
 
   const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,9 +166,13 @@ export function AreaDetailProvider({ children }: AreaDetailProviderProps) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <h2 className="text-xl font-bold text-red-600 mb-2">오류가 발생했습니다</h2>
-          <p className="text-gray-600 mb-4">{error.message || "데이터를 불러올 수 없습니다."}</p>
-          <button 
+          <h2 className="text-xl font-bold text-red-600 mb-2">
+            오류가 발생했습니다
+          </h2>
+          <p className="text-gray-600 mb-4">
+            {error.message || "데이터를 불러올 수 없습니다."}
+          </p>
+          <button
             onClick={() => navigate("/management")}
             className="px-4 py-2 bg-brand text-white rounded-lg hover:bg-orange-300"
           >
@@ -170,9 +188,11 @@ export function AreaDetailProvider({ children }: AreaDetailProviderProps) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <h2 className="text-xl font-bold text-gray-800 mb-2">구역 정보를 찾을 수 없습니다</h2>
+          <h2 className="text-xl font-bold text-gray-800 mb-2">
+            구역 정보를 찾을 수 없습니다
+          </h2>
           <p className="text-gray-600 mb-4">올바른 구역을 선택해주세요.</p>
-          <button 
+          <button
             onClick={() => navigate("/management")}
             className="px-4 py-2 bg-brand text-white rounded-lg hover:bg-orange-300"
           >
@@ -195,7 +215,7 @@ export function AreaDetailProvider({ children }: AreaDetailProviderProps) {
     isLoading,
     error,
     isSaving: isUpdating,
-    
+
     // 액션들
     setAreaName,
     addSubArea,
@@ -217,7 +237,9 @@ export function AreaDetailProvider({ children }: AreaDetailProviderProps) {
 export function useAreaDetailContext() {
   const context = useContext(AreaDetailContext);
   if (context === undefined) {
-    throw new Error('useAreaDetailContext must be used within an AreaDetailProvider');
+    throw new Error(
+      "useAreaDetailContext must be used within an AreaDetailProvider"
+    );
   }
   return context;
 }

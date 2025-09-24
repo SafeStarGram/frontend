@@ -2,7 +2,7 @@ import { CiWarning } from "react-icons/ci";
 import { GrLinkNext } from "react-icons/gr";
 import { IoLocationOutline, IoTimeOutline } from "react-icons/io5";
 import { useNavigate } from "react-router";
-// 기능 추가되면 이미지도 바꿔야함.
+
 interface IProps {
   title: string;
   upperArea: string;

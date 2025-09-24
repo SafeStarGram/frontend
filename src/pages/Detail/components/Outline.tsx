@@ -1,37 +1,27 @@
 import { FaRegCalendarAlt, FaRegUserCircle } from "react-icons/fa";
 import { IoLocationOutline } from "react-icons/io5";
-import { findDepartment, findPosition } from "../../shared/config/constants";
-import { changeTimeForm } from "../../shared/hooks/useCurrentTime";
-import type { IProfileData } from "../../shared/hooks/useProfile";
-import { useQuery } from "@tanstack/react-query";
-import api from "../../shared/api/axiosInstance";
-
-interface IData {
-  areaId: number;
-  subAreaId: number;
-  createdAt: string;
-  content: string;
-}
+import type { IProfileData } from "../../Profile/types";
+import { findDepartment, findPosition } from "../../../shared/config/constants";
+import { changeTimeForm } from "../../../shared/hooks/useCurrentTime";
+import { useAreaById } from "../../../shared/hooks/useAreaById";
+import type { IAreaData } from "../types";
 
 interface OutlineProps {
-  data: IData;
+  data: IAreaData;
   profileData?: IProfileData | null;
 }
 
 export default function Outline({ data, profileData }: OutlineProps) {
   const formattedContent = data.content.replace(/\\n/g, "\n");
 
-  // areaId 기반으로 구역 정보 불러오기
-  const { data: area } = useQuery({
-    queryKey: ["area", data.areaId],
-    queryFn: async () => (await api.get(`/api/areas/${data.areaId}`)).data,
-  });
+  const { area } = useAreaById(data);
 
   // subAreaId에 해당하는 이름 찾기
   const subAreaName = area?.subAreas?.find(
     (sub: { subAreaId: number; name: string }) =>
       sub.subAreaId === data.subAreaId
   )?.name;
+
   return (
     <div className="flex flex-col gap-10 mt-10">
       <div>

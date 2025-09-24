@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { IoCamera } from "react-icons/io5";
 import type { UseFormSetValue } from "react-hook-form";
-import type { IProfileData } from "../../shared/hooks/useProfile";
+import type { IProfileData } from "../types";
 
 interface Props {
   setValue: UseFormSetValue<IProfileData>;

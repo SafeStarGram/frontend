@@ -1,5 +1,5 @@
 import Button from "../../../shared/layout/Button";
-import LoadingSpinner from "../../../components/LoadingSpinner";
+import LoadingSpinner from "../../../shared/layout/LoadingSpinner";
 import { findDepartment, findPosition } from "../../../shared/config/constants";
 
 interface ManagerListProps {
@@ -8,8 +8,11 @@ interface ManagerListProps {
   error?: any;
 }
 
-export default function ManagerList({ users, isLoading, error }: ManagerListProps) {
-
+export default function ManagerList({
+  users,
+  isLoading,
+  error,
+}: ManagerListProps) {
   if (isLoading) {
     return <LoadingSpinner />;
   }
@@ -19,7 +22,8 @@ export default function ManagerList({ users, isLoading, error }: ManagerListProp
       <div className="space-y-4">
         <h3 className="text-xl font-bold text-gray-900">관리자 일람</h3>
         <div className="bg-white rounded-lg p-8 text-center text-red-500">
-          오류가 발생했습니다: {error.message || "인증이 필요합니다. 다시 로그인해주세요."}
+          오류가 발생했습니다:{" "}
+          {error.message || "인증이 필요합니다. 다시 로그인해주세요."}
         </div>
       </div>
     );
@@ -40,7 +44,7 @@ export default function ManagerList({ users, isLoading, error }: ManagerListProp
       <div className="flex justify-between items-center">
         <h3 className="text-xl font-bold text-gray-900">관리자 일람</h3>
       </div>
-      
+
       {/* 관리자 분류 헤더 */}
       <div className="grid grid-cols-3 gap-4 text-sm font-medium text-gray-600 px-2">
         <div>이름/공종</div>
@@ -59,17 +63,22 @@ export default function ManagerList({ users, isLoading, error }: ManagerListProp
                   👤
                 </div>
                 <div>
-                  <div className="font-medium text-gray-900">{user.name || '이름 없음'}</div>
+                  <div className="font-medium text-gray-900">
+                    {user.name || "이름 없음"}
+                  </div>
                   <div className="text-sm text-gray-500">
-                    ({findDepartment(user.department)} {findPosition(user.position)})
+                    ({findDepartment(user.department)}{" "}
+                    {findPosition(user.position)})
                   </div>
                 </div>
               </div>
 
               {/* 연락처/내선 번호 */}
               <div className="text-sm">
-                <div className="text-gray-900">{user.phoneNumber || '연락처 없음'}</div>
-                <div className="text-gray-500"># {user.radioNumber || '0'}</div>
+                <div className="text-gray-900">
+                  {user.phoneNumber || "연락처 없음"}
+                </div>
+                <div className="text-gray-500"># {user.radioNumber || "0"}</div>
               </div>
 
               {/* 권한 버튼 */}

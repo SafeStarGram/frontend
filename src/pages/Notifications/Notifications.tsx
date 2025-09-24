@@ -1,27 +1,9 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
 import Layout from "../../shared/layout/Layout";
-import Noti from "../../shared/layout/Noti";
-import api from "../../shared/api/axiosInstance";
+import Noti from "./components/Noti";
 import { SyncLoader } from "react-spinners";
 import { changeTimeForm } from "../../shared/hooks/useCurrentTime";
 import { useEffect, useRef } from "react";
-
-export interface INotification {
-  title: string;
-  areaId: string;
-  subAreaId: string;
-  createdAt: string;
-  reporterRisk: string;
-  postPhotoUrl: string;
-  postId: string;
-}
-
-const fetchNotifications = async ({ pageParam }: { pageParam?: number }) => {
-  const res = await api.get("/api/posts", {
-    params: { page: pageParam ?? 0, size: 5 },
-  });
-  return res.data;
-};
+import { useInfinitePost } from "../../shared/hooks/useInfinitePost";
 
 export default function Notifications() {
   const {
@@ -31,18 +13,7 @@ export default function Notifications() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfiniteQuery<INotification[]>({
-    queryKey: ["notifications"],
-    queryFn: ({ pageParam = 0 }) =>
-      fetchNotifications({ pageParam: pageParam as number }),
-    initialPageParam: 0,
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length === 5) {
-        return allPages.length; // 0 → 1 → 2 …
-      }
-      return null;
-    },
-  });
+  } = useInfinitePost();
 
   // 스크롤이 끝에 도달하면 fetchNextPage를 호출
   const loadMoreRef = useRef<HTMLDivElement | null>(null);

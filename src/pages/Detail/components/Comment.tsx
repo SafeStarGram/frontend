@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { findDepartment, findPosition } from "../../shared/config/constants";
-import { compareTime } from "../../shared/hooks/useCurrentTime";
-import type { RootState } from "../../store/store";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import api from "../../shared/api/axiosInstance";
+import type { RootState } from "../../../store/store";
+import { findDepartment, findPosition } from "../../../shared/config/constants";
+import { compareTime } from "../../../shared/hooks/useCurrentTime";
+import {
+  useDeleteComment,
+  useEditComment,
+} from "../../../shared/hooks/useComments";
 
 interface IProps {
   userId: number;
@@ -30,38 +32,15 @@ export default function Comment({
   profilePhotoUrl,
 }: IProps) {
   const currentUser = useSelector((state: RootState) => state.user.userId);
-  const queryClient = useQueryClient();
   const [isEditing, setIsEditing] = useState(false);
   const [editMessage, setEditMessage] = useState(message);
 
-  const deleteMutation = useMutation({
-    mutationFn: async (commentId: number) => {
-      return await api.delete(`/api/comment/delete/${commentId}`);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["comments", postId] });
-    },
-  });
-
-  const editMutation = useMutation({
-    mutationFn: async ({
-      commentId,
-      message,
-    }: {
-      commentId: number;
-      message: string;
-    }) => {
-      return await api.patch(`/api/comment/modify/${commentId}`, { message });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["comments", postId] });
-      setIsEditing(false);
-    },
-  });
+  const deleteComment = useDeleteComment(postId);
+  const editComment = useEditComment(postId);
 
   const handleDelete = () => {
     if (window.confirm("댓글을 삭제하시겠습니까?")) {
-      deleteMutation.mutate(commentId);
+      deleteComment.mutate(commentId);
     }
   };
 
@@ -70,7 +49,7 @@ export default function Comment({
       alert("댓글 내용을 입력해주세요.");
       return;
     }
-    editMutation.mutate({ commentId, message: editMessage });
+    editComment.mutate({ commentId, message: editMessage });
   };
 
   const handleEditCancel = () => {
@@ -96,19 +75,19 @@ export default function Comment({
               value={editMessage}
               onChange={(e) => setEditMessage(e.target.value)}
               className="w-full p-2 border border-gray-300 rounded resize-none"
-              disabled={editMutation.isPending}
+              disabled={editComment.isPending}
             />
             <div className="flex gap-2 mt-2">
               <button
                 onClick={handleEditSubmit}
-                disabled={editMutation.isPending}
+                disabled={editComment.isPending}
                 className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 disabled:opacity-50"
               >
-                {editMutation.isPending ? "저장 중..." : "저장"}
+                {editComment.isPending ? "저장 중..." : "저장"}
               </button>
               <button
                 onClick={handleEditCancel}
-                disabled={editMutation.isPending}
+                disabled={editComment.isPending}
                 className="px-3 py-1 bg-gray-500 text-white rounded text-sm hover:bg-gray-600"
               >
                 취소
@@ -130,10 +109,10 @@ export default function Comment({
                 )}
                 <button
                   onClick={handleDelete}
-                  disabled={deleteMutation.isPending}
+                  disabled={deleteComment.isPending}
                   className="text-red-500 hover:underline text-sm"
                 >
-                  {deleteMutation.isPending ? "삭제 중..." : "삭제"}
+                  {deleteComment.isPending ? "삭제 중..." : "삭제"}
                 </button>
               </div>
             )}

@@ -1,7 +1,7 @@
 import { CiWarning } from "react-icons/ci";
-import { findScore, scores } from "../../shared/config/constants";
 import { useForm } from "react-hook-form";
-import type { IProfileData } from "../../shared/hooks/useProfile";
+import type { IProfileData } from "../../Profile/types";
+import { findScore, scores } from "../../../shared/config/constants";
 
 interface IProps {
   score: number;

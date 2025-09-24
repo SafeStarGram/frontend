@@ -1,18 +1,14 @@
 import type { UseFormRegister, UseFormWatch } from "react-hook-form";
 import { IoLocationOutline } from "react-icons/io5";
-import type { IArea, IForm } from "../../shared/types/upload";
+import type { IArea, IForm } from "../types";
 
-interface LocationSelectorProps {
+interface IProps {
   register: UseFormRegister<IForm>;
   watch: UseFormWatch<IForm>;
   areas: IArea[] | undefined;
 }
 
-export const LocationSelector = ({
-  register,
-  watch,
-  areas,
-}: LocationSelectorProps) => {
+export const LocationSelector = ({ register, watch, areas }: IProps) => {
   const selectedUpperArea = watch("upperArea");
 
   return (

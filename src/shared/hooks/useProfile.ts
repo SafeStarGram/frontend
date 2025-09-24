@@ -1,15 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "../api/axiosInstance";
-
-export interface IProfileData {
-  name: string;
-  phone: string;
-  radio: number;
-  department: string;
-  position: string;
-  image: File | string | null;
-  userId: number;
-}
+import type { IProfileData } from "../../pages/Profile/types";
 
 export const useProfile = () => {
   const queryClient = useQueryClient();

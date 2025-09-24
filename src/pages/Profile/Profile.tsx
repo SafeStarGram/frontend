@@ -1,11 +1,11 @@
 import Layout from "../../shared/layout/Layout";
 import Button from "../../shared/layout/Button";
 import { useProfile } from "../../shared/hooks/useProfile";
-import ProfileForm from "../../components/Profile/ProfileForm";
-import type { IProfileData } from "../../shared/hooks/useProfile";
 import { useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
+import ProfileForm from "./components/ProfileForm";
+import type { IProfileData } from "./types";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -17,6 +17,7 @@ export default function Profile() {
     isSuccess: mutationSuccess,
     isPending: mutationLoading,
   } = useProfile();
+
   // 저장 중인지 추적하는 ref
   const isSaving = useRef(false);
   // 프로필 저장 성공 토스트
