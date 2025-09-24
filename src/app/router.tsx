@@ -5,9 +5,13 @@ import HomePage from "../pages/HomePage/HomePage";
 import Profile from "../pages/Profile/Profile";
 import Upload from "../pages/Upload/Upload";
 import Notifications from "../pages/Notifications/Notifications";
+import Management from "../pages/Management";
 import ProtectedRoute from "./ProtectedRoute";
 import Detail from "../pages/Detail/Detail";
 import Section from "../pages/Section/Section";
+import AddArea from "../pages/AddArea";
+import Statistics from "../pages/Statistics";
+import AreaDetail from "../pages/AreaDetail";
 
 const router = createBrowserRouter([
   {
@@ -49,6 +53,11 @@ const router = createBrowserRouter([
     children: [],
   },
   {
+    path: "/management",
+    element: <Management />,
+    children: [],
+  },
+  {
     path: "/noti/:postId",
     element: (
       <ProtectedRoute>
@@ -64,6 +73,19 @@ const router = createBrowserRouter([
         <Section />
       </ProtectedRoute>
     ),
+    path: "/addarea",
+    element: <AddArea />,
+    children: [],
+  },
+  {
+    path: "/stat",
+    element: <Statistics />,
+    children: [],
+  },
+  {
+    path: "/areadetail",
+    element: <AreaDetail />,
+    children: [],
   },
 ]);
 

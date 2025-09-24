@@ -5,8 +5,10 @@ import ProfileForm from "../../components/Profile/ProfileForm";
 import type { IProfileData } from "../../shared/hooks/useProfile";
 import { useEffect, useRef } from "react";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
 
 export default function Profile() {
+  const navigate = useNavigate();
   const {
     profileData,
     isLoading: queryLoading,
@@ -77,6 +79,7 @@ export default function Profile() {
         className="rounded-2xl w-full"
         baseColor="black"
         hoverColor="black"
+        onClick={() => navigate("/management")}
       >
         현장 관리
       </Button>

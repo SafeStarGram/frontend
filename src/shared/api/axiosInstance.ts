@@ -3,7 +3,7 @@ import { store } from "../../store/store";
 import { clearAccessToken, setAccessToken } from "../../store/authSlice";
 
 const api = axios.create({
-  baseURL: "https://chan23.duckdns.org/safe_api/",
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
