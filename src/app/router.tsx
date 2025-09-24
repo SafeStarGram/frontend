@@ -73,6 +73,8 @@ const router = createBrowserRouter([
         <Section />
       </ProtectedRoute>
     ),
+  },
+  {
     path: "/addarea",
     element: <AddArea />,
   },
