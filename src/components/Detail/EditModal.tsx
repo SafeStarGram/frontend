@@ -1,13 +1,13 @@
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import api from "../../shared/api/axiosInstance";
 import { scores } from "../../shared/config/constants";
 
 interface IForm {
   title: string;
-  areaId: string;
-  subAreaId: string;
+  areaId: number;
+  subAreaId: number;
   content: string;
   reporterRisk: string;
 }
@@ -28,7 +28,7 @@ interface EditModalProps {
   isOpen: boolean;
   onClose: () => void;
   postId: string;
-  detailData: any;
+  detailData: IForm;
   areas: Area[];
 }
 
@@ -40,47 +40,32 @@ export default function EditModal({
   areas,
 }: EditModalProps) {
   const queryClient = useQueryClient();
-  const { register, handleSubmit, reset, watch, setValue } = useForm<IForm>();
-  const [selectedAreaId, setSelectedAreaId] = useState<string>("");
 
+  const { register, handleSubmit, reset, watch } = useForm<IForm>({
+    defaultValues: {
+      title: detailData?.title ?? "",
+      areaId: detailData?.areaId ?? 0,
+      subAreaId: detailData?.subAreaId ?? 0,
+      content: detailData?.content ?? "",
+      reporterRisk: detailData?.reporterRisk ?? "",
+    },
+  });
+
+  // 지역 선택 값 watch
   const watchedAreaId = watch("areaId");
 
-  // 선택된 지역의 서브 에리어 찾기
+  // 선택된 지역 객체 찾기
   const selectedArea = areas?.find((area) => area.id === Number(watchedAreaId));
   const subAreas = selectedArea?.subAreas || [];
 
-  useEffect(() => {
-    if (detailData && isOpen) {
-      const formData = {
-        title: detailData.title,
-        areaId: detailData.areaId,
-        subAreaId: detailData.subAreaId,
-        content: detailData.content,
-        reporterRisk: detailData.reporterRisk,
-      };
-      console.log(formData);
-      reset(formData);
-      setSelectedAreaId(String(detailData.areaId));
-    }
-  }, [detailData, reset, isOpen]);
-
-  // 지역 변경 시 서브지역 초기화
-  useEffect(() => {
-    if (watchedAreaId !== selectedAreaId && watchedAreaId) {
-      setValue("subAreaId", "");
-      setSelectedAreaId(watchedAreaId);
-    }
-  }, [watchedAreaId, selectedAreaId, setValue]);
-
+  // 수정 mutation
   const editMutation = useMutation({
-    mutationFn: async (formData: FormData) => {
-      for (const [key, value] of formData.entries()) {
-        console.log(key, value, typeof value);
-      }
-      return (await api.patch(`api/posts/${postId}`, formData)).data;
+    mutationFn: async (data: IForm) => {
+      console.log("보내는 데이터:", data);
+      const res = await api.patch(`api/posts/${postId}`, data);
+      return res.data;
     },
     onSuccess: () => {
-      alert("수정이 완료되었습니다.");
       queryClient.invalidateQueries({ queryKey: ["detail", { postId }] });
       onClose();
     },
@@ -91,13 +76,7 @@ export default function EditModal({
   });
 
   const onSubmit = (data: IForm) => {
-    const formData = new FormData();
-    formData.append("title", data.title);
-    formData.append("areaId", data.areaId);
-    formData.append("subAreaId", data.subAreaId);
-    formData.append("content", data.content);
-    formData.append("reporterRisk", data.reporterRisk);
-    editMutation.mutate(formData);
+    editMutation.mutate(data);
   };
 
   const handleBackgroundClick = (e: React.MouseEvent) => {
@@ -105,6 +84,13 @@ export default function EditModal({
       onClose();
     }
   };
+
+  // 모달 닫힐 때 폼 리셋
+  useEffect(() => {
+    if (!isOpen) {
+      reset();
+    }
+  }, [isOpen, reset]);
 
   if (!isOpen) return null;
 
@@ -129,6 +115,7 @@ export default function EditModal({
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-4"
           >
+            {/* 제목 */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 제목
@@ -140,6 +127,7 @@ export default function EditModal({
               />
             </div>
 
+            {/* 위치 */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 위치
@@ -160,7 +148,7 @@ export default function EditModal({
                 <select
                   {...register("subAreaId")}
                   className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
-                  disabled={!selectedAreaId || subAreas.length === 0}
+                  disabled={!watchedAreaId || subAreas.length === 0}
                 >
                   <option value="">세부 위치를 선택하세요</option>
                   {subAreas.map((subArea) => (
@@ -172,6 +160,7 @@ export default function EditModal({
               </div>
             </div>
 
+            {/* 내용 */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 내용
@@ -183,6 +172,7 @@ export default function EditModal({
               />
             </div>
 
+            {/* 위험성 평가 */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 위험성 평가
@@ -199,6 +189,7 @@ export default function EditModal({
               </select>
             </div>
 
+            {/* 버튼 */}
             <div className="flex gap-3 mt-6">
               <button
                 type="button"

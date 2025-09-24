@@ -5,6 +5,7 @@ import api from "../../shared/api/axiosInstance";
 interface IAreaData {
   // 미조치 건수, 위험요소 신고 건수 필요.
   areaName: string;
+  id: number;
 }
 
 export default function SummaryContainer() {
@@ -12,7 +13,6 @@ export default function SummaryContainer() {
     queryKey: ["summary"],
     queryFn: async () => (await api.get("api/areas/read")).data,
   });
-
   return (
     <div>
       <h3 className="text-2xl mb-3">현장구역 요약</h3>
@@ -20,7 +20,7 @@ export default function SummaryContainer() {
         {isLoading
           ? null
           : data?.map((area, index) => (
-              <Summary area={area.areaName} key={index} />
+              <Summary area={area.areaName} id={area.id} key={index} />
             ))}
       </div>
     </div>
