@@ -16,6 +16,7 @@ interface IComment {
   message: string;
   createdAt: string;
   postId: string;
+  profilePhotoUrl: string;
 }
 
 export default function CommentContainer({ postId }: IProps) {
@@ -40,6 +41,7 @@ export default function CommentContainer({ postId }: IProps) {
               message={comment.message}
               createdAt={comment.createdAt}
               commentId={comment.commentId}
+              profilePhotoUrl={comment.profilePhotoUrl}
             />
           ))}
         </div>

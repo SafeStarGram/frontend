@@ -15,6 +15,7 @@ interface IProps {
   createdAt: string;
   postId: string;
   commentId: number;
+  profilePhotoUrl: string;
 }
 
 export default function Comment({
@@ -26,6 +27,7 @@ export default function Comment({
   message,
   createdAt,
   commentId,
+  profilePhotoUrl,
 }: IProps) {
   const currentUser = useSelector((state: RootState) => state.user.userId);
   const queryClient = useQueryClient();
@@ -78,10 +80,7 @@ export default function Comment({
 
   return (
     <div className="flex gap-3 p-3">
-      <img
-        src="https://imagescdn.gettyimagesbank.com/500/202202/jv12533599.jpg"
-        className="w-12 h-12 rounded-full"
-      />
+      <img src={profilePhotoUrl} className="w-12 h-12 rounded-full" />
       <div className="w-full">
         <div className="flex items-center justify-between w-full">
           <div className="font-bold text-xl">
